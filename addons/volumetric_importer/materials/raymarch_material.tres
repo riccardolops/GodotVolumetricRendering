@@ -1,0 +1,55 @@
+[gd_resource type="ShaderMaterial" load_steps=10 format=3 uid="uid://d600wmn8gwnt"]
+
+[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/raymarch.gdshader" id="1_m57c8"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_avcaw"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_wap24"]
+noise = SubResource("FastNoiseLite_avcaw")
+
+[sub_resource type="Gradient" id="Gradient_3ir6a"]
+offsets = PackedFloat32Array(0, 0, 0.1787, 0.2, 0.28, 0.4, 0.547, 1, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.024, 0, 0, 0, 0.03, 0, 0, 0, 0.546, 0, 0, 0, 0.5266, 1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n2i6e"]
+gradient = SubResource("Gradient_3ir6a")
+width = 512
+
+[sub_resource type="Gradient" id="Gradient_2ex34"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.266325, 0.28041, 0.340589, 0.348271, 0.381562, 0.455826, 0.664533, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.00824569, 0.293501, 0.435744, 1, 0.340036, 0.183145, 0.161738, 1, 1, 1, 1, 1, 0.42562, 0, 0.0454371, 1, 0.437181, 0.437508, 0.429693, 1, 0.595607, 0.61363, 0.570766, 1, 0.760563, 0.760563, 0.760563, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_iwba1"]
+gradient = SubResource("Gradient_2ex34")
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_mqrsm"]
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_e1xi0"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_m57c8")
+shader_parameter/_MinVal = 0.15
+shader_parameter/_MaxVal = 1000.0
+shader_parameter/_MinGradient = -0.041
+shader_parameter/_TextureSize = Vector3(2255, 255, 255)
+shader_parameter/_LightingGradientThresholdStart = 0.02
+shader_parameter/_LightingGradientThresholdEnd = 0.15
+shader_parameter/useTransferFunction2D = false
+shader_parameter/useLighting = false
+shader_parameter/useMainLight = false
+shader_parameter/MODE = 0
+shader_parameter/earlyRayTermianation = true
+shader_parameter/noise_scale = 1.0
+shader_parameter/noise_transform = null
+shader_parameter/density_threshold = 0.5
+shader_parameter/deformation = 0.0
+shader_parameter/anim_speed = 0.0
+shader_parameter/volumeStepSize = 0.005
+shader_parameter/volumeMaxSteps = 200
+shader_parameter/volumeDataSampler = SubResource("ImageTexture3D_mqrsm")
+shader_parameter/volumeGradientSampler = SubResource("ImageTexture3D_e1xi0")
+shader_parameter/noiseSampler = SubResource("NoiseTexture2D_wap24")
+shader_parameter/transferfunctionSamplerColor = SubResource("GradientTexture1D_iwba1")
+shader_parameter/transferfunctionSamplerAlpha = SubResource("GradientTexture1D_n2i6e")

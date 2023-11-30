@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://d351mq4ae6mor"]
+
+[ext_resource type="Script" path="res://Camroot.cs" id="3_60woi"]
+
+[node name="RayMarchingExample" type="Node3D"]
+
+[node name="Camroot" type="Node3D" parent="."]
+script = ExtResource("3_60woi")
+
+[node name="h" type="Node3D" parent="Camroot"]
+
+[node name="v" type="Node3D" parent="Camroot/h"]
+
+[node name="Camera3D" type="Camera3D" parent="Camroot/h/v"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.27947)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.761798, 0.647814, 0, -0.647814, 0.761798, 0, 2.32468, 1.94176)
