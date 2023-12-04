@@ -31,12 +31,12 @@ namespace VolumetricRendering
         public ProgressHandler(IProgressView progressView, string title = "", string description = "")
         {
             this.progressView = progressView;
-            stageStack.Push(new ProgressStage{ start = 0.0f, end = 1.0f });
+            stageStack.Push(new ProgressStage { start = 0.0f, end = 1.0f });
             this.progressView.StartProgress(title, description);
         }
 
         /// <summary>
-        /// Bramch a new sub-stage to track progress for.
+        /// Branch a new sub-stage to track progress for.
         /// Example:
         ///   progress.StartStage(0.6f, "Do A"); // Will take up 60% of the progress.
         ///   // Do work for A, and report progress with progress.ReportProgress(...)
@@ -56,9 +56,9 @@ namespace VolumetricRendering
 
             if (description != "")
                 this.description = description;
-            
+
             ProgressStage stage = stageStack.Peek();
-            stageStack.Push(new ProgressStage{ start = totalProgress, end = totalProgress + (stage.end - stage.start) * weight });
+            stageStack.Push(new ProgressStage { start = totalProgress, end = totalProgress + (stage.end - stage.start) * weight });
             UpdateProgressView();
         }
 
@@ -111,7 +111,7 @@ namespace VolumetricRendering
                 return;
 
             if (description != "")
-                this.description = description;
+                this.description = description + " " + (currentStep + 1) + "/" + totalSteps;
             currentStageProgress = currentStep / (float)totalSteps;
             totalProgress = GetAbsoluteProgress(currentStageProgress);
 

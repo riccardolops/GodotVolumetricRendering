@@ -425,7 +425,7 @@ void fragment() {
 	vec3 ls_pixel_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec3 ro = CAMERA_POSITION_WORLD; //Camera Position in World Space
 	vec3 rd = normalize(ws_pixel_pos - ro);
-	frag_out output = frag_surf(position);
+	frag_out output = frag_dvr(position);
 	
 	ALBEDO = output.albedo;
 	ALPHA = output.alpha;

@@ -1,6 +1,12 @@
 #if TOOLS
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using Godot.NativeInterop;
 
 namespace VolumetricRendering
 {
@@ -9,10 +15,12 @@ namespace VolumetricRendering
     {
         private Control dock;
         private EditorFileDialog dialog;
+        private ProgressBar progressView;
+        private RichTextLabel progressText;
 
         public override void _EnterTree()
         {
-            AddCustomType("VolumeRenderedObject", "MeshInstance3D", ResourceLoader.Load("res://addons/volumetric_importer/VolumetricRendering/VolumeRenderedObject.cs") as CSharpScript, ResourceLoader.Load("res://addons/volumetric_importer/icons/VolumeRenderedObject.svg") as Texture2D);
+            // AddCustomType("VolumeRenderedObject", "MeshInstance3D", ResourceLoader.Load("res://addons/volumetric_importer/VolumetricRendering/VolumeRenderedObject.cs") as CSharpScript, ResourceLoader.Load("res://addons/volumetric_importer/icons/VolumeRenderedObject.svg") as Texture2D);
             dock = new()
             {
                 Name = "Volumetric Importer"
@@ -39,9 +47,15 @@ namespace VolumetricRendering
             {
                 Text = "Import DICOM dataset"
             };
+            progressText = new();
+            progressText.FitContent = true;
+            progressText.Text = "Importing...";
+            progressView = new();
             vbox.AddChild(NRRDButton);
             vbox.AddChild(NiFTiButton);
             vbox.AddChild(DICOMButton);
+            vbox.AddChild(progressText);
+            vbox.AddChild(progressView);
             AddControlToDock(DockSlot.LeftUl, dock);
             _ = NRRDButton.Connect("pressed", new Callable(this, nameof(ShowOpenNRRDFilePopup)));
             _ = NiFTiButton.Connect("pressed", new Callable(this, nameof(ShowOpenNiFTiFilePopup)));
@@ -50,7 +64,7 @@ namespace VolumetricRendering
 
         public override void _ExitTree()
         {
-            RemoveCustomType("VolumeRenderedObject");
+            // RemoveCustomType("VolumeRenderedObject");
             RemoveControlFromDocks(dock);
             dock.Free();
         }
@@ -95,7 +109,7 @@ namespace VolumetricRendering
         }
         public void ShowOpenNiFTiFilePopup()
         {
-            ShowOpenFilePopup("*.nifti", "Open NiFTi File", nameof(OnNiFTiFileSelected));
+            ShowOpenFilePopup("*.nii.gz", "Open NiFTi File", nameof(OnNiFTiFileSelected));
         }
         public void ShowOpenDICOMFolderPopup()
         {
@@ -103,7 +117,28 @@ namespace VolumetricRendering
         }
         public async void OnOpenNRRDDatasetResultAsync(string path)
         {
-            IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);
+            using (ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NRRD import"))
+            {
+                progressHandler.ReportProgress(0.0f, "Importing NRRD dataset");
+                IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);
+                VolumeDataset dataset = await importer.ImportAsync(path);
+                if (dataset != null)
+                {
+                    Node root = GetTree().EditedSceneRoot;
+                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
+                    root.AddChild(volObj);
+                    volObj.Owner = root.GetTree().EditedSceneRoot;
+                }
+                else
+                {
+                    GD.PrintErr("Failed to import NRRD dataset");
+                }
+            }
+
+        }
+        public async void OnNiFTiFileSelected(string path)
+        {
+            IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
             VolumeDataset dataset = await importer.ImportAsync(path);
             if (dataset != null)
             {
@@ -114,16 +149,34 @@ namespace VolumetricRendering
             }
             else
             {
-                GD.PrintErr("Failed to import NRRD dataset");
+                GD.PrintErr("Failed to import NiFTi dataset");
             }
         }
-        public static void OnNiFTiFileSelected(string path)
+        public async void OnDICOMFolderSelected(string path)
         {
-            GD.Print(path);
-        }
-        public static void OnDICOMFolderSelected(string path)
-        {
-            GD.Print(path);
+            bool recursive = true;
+            // Read all files
+            IEnumerable<string> fileCandidates = Directory.EnumerateFiles(path, "*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                .Where(p => p.EndsWith(".dcm", StringComparison.InvariantCultureIgnoreCase) || p.EndsWith(".dicom", StringComparison.InvariantCultureIgnoreCase) || p.EndsWith(".dicm", StringComparison.InvariantCultureIgnoreCase));
+
+            // Import the dataset
+            IImageSequenceImporter importer = ImporterFactory.CreateImageSequenceImporter(ImageSequenceFormat.DICOM);
+            IEnumerable<IImageSequenceSeries> seriesList = await importer.LoadSeriesAsync(fileCandidates);
+            float numVolumesCreated = 0;
+            Node root = GetTree().EditedSceneRoot;
+            foreach (IImageSequenceSeries series in seriesList)
+            {
+                VolumeDataset dataset = await importer.ImportSeriesAsync(series);
+                // Spawn the object
+                if (dataset != null)
+                {
+                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset);
+                    volObj.Position = new Vector3(numVolumesCreated, 0, 0);
+                    root.AddChild(volObj);
+                    volObj.Owner = root.GetTree().EditedSceneRoot;
+                    numVolumesCreated++;
+                }
+            }
         }
     }
 }

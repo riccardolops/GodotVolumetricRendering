@@ -221,7 +221,7 @@ namespace VolumetricRendering
             float maxValue = 0;
             float maxRange = 0;
 
-            progressHandler.StartStage(0.2f, "Calculating value bounds");
+            progressHandler.StartStage(0.1f, "Calculating value bounds");
             await Task.Run(() =>
             {
                 minValue = GetMinDataValue();
@@ -232,7 +232,7 @@ namespace VolumetricRendering
 
             ImageTexture3D texture = null;
 
-            progressHandler.StartStage(0.8f, "Creating texture");
+            progressHandler.StartStage(0.2f, "Creating texture for slice 0/" + dimZ);
             Array<Image> imageArray = new Array<Image>();
             for (int z = 0; z < dimZ; z++)
             {
@@ -280,7 +280,7 @@ namespace VolumetricRendering
             });
             progressHandler.EndStage();
 
-            progressHandler.StartStage(0.6f, "Creating gradient texture");
+            progressHandler.StartStage(0.4f, "Creating gradient texture");
             Array<Image> imageArray = new Array<Image>();
             await Task.Run(() =>
             {
@@ -304,7 +304,7 @@ namespace VolumetricRendering
             });
             progressHandler.EndStage();
 
-            progressHandler.StartStage(0.8f, "Uploading gradient texture");
+            progressHandler.StartStage(0.1f, "Uploading gradient texture");
             texture = new ImageTexture3D();
             texture.Create(texformat, dimX, dimY, dimZ, useMipmaps, imageArray);
             progressHandler.EndStage();

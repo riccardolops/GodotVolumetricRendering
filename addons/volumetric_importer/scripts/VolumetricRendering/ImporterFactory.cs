@@ -8,7 +8,7 @@ namespace VolumetricRendering
     /// Use this if you only want to import a dataset, without deciding which importer to use.
     /// Some dataset formats can be imported using several different importers, in which case this factory will return the best alternative.
     /// </summary>
-    public class ImporterFactory
+    public static class ImporterFactory
     {
         /// <summary>
         /// Create an importer for an image sequence dataset (multiple files) of the specified format.
