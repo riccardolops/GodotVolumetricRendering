@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://d351mq4ae6mor"]
+[gd_scene load_steps=9 format=3 uid="uid://d351mq4ae6mor"]
 
+[ext_resource type="Material" uid="uid://d600wmn8gwnt" path="res://addons/volumetric_importer/materials/raymarch_material.tres" id="2_21bxp"]
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/VolumeRenderedObject.cs" id="3_04dbr"]
 [ext_resource type="Script" path="res://Camroot.cs" id="3_60woi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vjdq1"]
+material = ExtResource("2_21bxp")
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_qhgcj"]
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_inxe6"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ptfpx"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dje51"]
+noise = SubResource("FastNoiseLite_ptfpx")
 
 [node name="RayMarchingExample" type="Node3D"]
 
@@ -16,3 +30,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.27947)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.761798, 0.647814, 0, -0.647814, 0.761798, 0, 2.32468, 1.94176)
+
+[node name="VolumeRenderedObject_D1nrrd" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.364, 0, 0, 0, 0, 0.753, 0, 0.473484, 0, 0, 0, 0)
+mesh = SubResource("BoxMesh_vjdq1")
+script = ExtResource("3_04dbr")
+textureDataset = SubResource("ImageTexture3D_qhgcj")
+textureGradient = SubResource("ImageTexture3D_inxe6")
+noiseTexture = SubResource("NoiseTexture2D_dje51")

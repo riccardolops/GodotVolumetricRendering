@@ -73,8 +73,8 @@ namespace VolumetricRendering
                 try
                 {
                     if (progressHandler == null)
-                        progressHandler = NullProgressHandler.instance;
-                    dataTexture = await CreateTextureInternalAsync(progressHandler);
+                        progressHandler = new NullProgressHandler();
+                    dataTexture = await CreateTextureInternalAsync(progressHandler != null ? progressHandler : NullProgressHandler.instance);
                 }
                 finally
                 {

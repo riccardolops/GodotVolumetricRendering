@@ -11,7 +11,7 @@ namespace VolumetricRendering
                 volumeDataset.scale.Y,
                 -volumeDataset.scale.Z
             );
-            volumeDataset.rotation = Quaternion.FromEuler(new Vector3(270.0f, 0.0f, 0.0f));
+            volumeDataset.rotation = Quaternion.FromEuler(new Vector3(Mathf.DegToRad(90.0f), 0.0f, 0.0f));
         }
     }
 }

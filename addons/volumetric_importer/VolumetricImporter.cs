@@ -138,18 +138,22 @@ namespace VolumetricRendering
         }
         public async void OnNiFTiFileSelected(string path)
         {
-            IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
-            VolumeDataset dataset = await importer.ImportAsync(path);
-            if (dataset != null)
+            using (ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NiFTi import"))
             {
-                Node root = GetTree().EditedSceneRoot;
-                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset);
-                root.AddChild(volObj);
-                volObj.Owner = root.GetTree().EditedSceneRoot;
-            }
-            else
-            {
-                GD.PrintErr("Failed to import NiFTi dataset");
+                progressHandler.ReportProgress(0.0f, "Importing NiFTi dataset");
+                IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
+                VolumeDataset dataset = await importer.ImportAsync(path);
+                if (dataset != null)
+                {
+                    Node root = GetTree().EditedSceneRoot;
+                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
+                    root.AddChild(volObj);
+                    volObj.Owner = root.GetTree().EditedSceneRoot;
+                }
+                else
+                {
+                    GD.PrintErr("Failed to import NiFTi dataset");
+                }
             }
         }
         public async void OnDICOMFolderSelected(string path)
@@ -166,6 +170,8 @@ namespace VolumetricRendering
             Node root = GetTree().EditedSceneRoot;
             foreach (IImageSequenceSeries series in seriesList)
             {
+                ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NiFTi import");
+                progressHandler.ReportProgress(0.0f, "Importing DICOM dataset");
                 VolumeDataset dataset = await importer.ImportSeriesAsync(series);
                 // Spawn the object
                 if (dataset != null)
