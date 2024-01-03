@@ -12,8 +12,12 @@ config_version=5
 
 config/name="GodotVolumetricRendering"
 run/main_scene="res://ray_marching_example.tscn"
-config/features=PackedStringArray("4.0", "C#", "Forward Plus")
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/subwindows/embed_subwindows=false
 
 [dotnet]
 

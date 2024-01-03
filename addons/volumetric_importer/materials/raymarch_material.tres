@@ -1,55 +1,23 @@
-[gd_resource type="ShaderMaterial" load_steps=10 format=3 uid="uid://d600wmn8gwnt"]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://d600wmn8gwnt"]
 
-[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/raymarch.gdshader" id="1_m57c8"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ptfpx"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dje51"]
-noise = SubResource("FastNoiseLite_ptfpx")
-
-[sub_resource type="Gradient" id="Gradient_moupx"]
-offsets = PackedFloat32Array(0, 0, 0.1787, 0.2, 0.28, 0.4, 0.547, 1, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.024, 0, 0, 0, 0.03, 0, 0, 0, 0.546, 0, 0, 0, 0.5266, 1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_cja13"]
-gradient = SubResource("Gradient_moupx")
-width = 512
-
-[sub_resource type="Gradient" id="Gradient_51gc8"]
-offsets = PackedFloat32Array(0, 0, 0.2415, 0.3253, 1, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.11, 0.14, 0.13, 1, 0.469, 0.354, 0.223, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_6wqvi"]
-gradient = SubResource("Gradient_51gc8")
-width = 512
-
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_qhgcj"]
-
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_inxe6"]
+[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/raymarch.gdshader" id="1_ochf0"]
 
 [resource]
 render_priority = 0
-shader = ExtResource("1_m57c8")
-shader_parameter/_MinVal = 0.011
-shader_parameter/_MaxVal = 1000.0
-shader_parameter/_MinGradient = 0.01
-shader_parameter/_TextureSize = Vector3i(0, 0, 0)
-shader_parameter/_LightingGradientThresholdStart = 0.02
-shader_parameter/_LightingGradientThresholdEnd = 0.15
+shader = ExtResource("1_ochf0")
+shader_parameter/_MinVal = 0.001
+shader_parameter/_MaxVal = 1.0
+shader_parameter/_MinGradient = 0.0
+shader_parameter/_TextureSize = null
+shader_parameter/_LightingGradientThresholdStart = 0.0
+shader_parameter/_LightingGradientThresholdEnd = 0.0
 shader_parameter/useTransferFunction2D = false
-shader_parameter/useLighting = false
-shader_parameter/useMainLight = false
-shader_parameter/MODE = 0
+shader_parameter/useLighting = true
+shader_parameter/useMainLight = true
 shader_parameter/earlyRayTermianation = true
-shader_parameter/noise_scale = 1.0
-shader_parameter/noise_transform = null
-shader_parameter/density_threshold = 0.5
-shader_parameter/deformation = 0.0
-shader_parameter/anim_speed = 0.0
-shader_parameter/volumeStepSize = 0.005
-shader_parameter/volumeMaxSteps = 200
-shader_parameter/volumeDataSampler = SubResource("ImageTexture3D_qhgcj")
-shader_parameter/volumeGradientSampler = SubResource("ImageTexture3D_inxe6")
-shader_parameter/noiseSampler = SubResource("NoiseTexture2D_dje51")
-shader_parameter/transferfunctionSamplerColor = SubResource("GradientTexture1D_6wqvi")
-shader_parameter/transferfunctionSamplerAlpha = SubResource("GradientTexture1D_cja13")
+shader_parameter/cubicInterpolation = false
+shader_parameter/cross_section_on = false
+shader_parameter/_NumCrossSections = null
+shader_parameter/_CrossSectionMatrices = null
+shader_parameter/_CrossSectionTypes = null
+shader_parameter/MODE = 0

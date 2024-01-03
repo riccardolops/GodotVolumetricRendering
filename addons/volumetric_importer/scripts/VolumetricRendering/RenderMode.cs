@@ -4,8 +4,8 @@ namespace VolumetricRendering
 {
     public enum RenderMode
     {
+        MaximumIntensityProjection,
         DirectVolumeRendering,
-        MaximumIntensityProjectipon,
         IsosurfaceRendering
     }
 

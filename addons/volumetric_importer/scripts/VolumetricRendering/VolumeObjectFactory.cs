@@ -13,7 +13,10 @@ namespace VolumetricRendering
             volObj.Name = "VolumeRenderedObject_" + dataset.datasetName;
             volObj.Scale = dataset.scale;
             // volObj.RotationDegrees = dataset.rotation.GetEuler();
-            volObj.Mesh = new BoxMesh();
+            volObj.Mesh = new BoxMesh
+            {
+                FlipFaces = true
+            };
             volObj.Mesh.SurfaceSetMaterial(0, ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres"));
             volObj.textureDataset = dataset.GetDataTexture();
             volObj.textureGradient = dataset.GetGradientTexture();
@@ -28,11 +31,15 @@ namespace VolumetricRendering
                     volObj.Name = "VolumeRenderedObject_" + dataset.datasetName;
                     volObj.Scale = dataset.scale;
                     volObj.Quaternion = dataset.rotation;
-                    volObj.Mesh = new BoxMesh();
+                    volObj.Mesh = new BoxMesh
+                    {
+                        FlipFaces = true
+                    };
                     volObj.Mesh.SurfaceSetMaterial(0, ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres"));
                 });
             volObj.textureDataset = await dataset.GetDataTextureAsync(progressHandler);
             volObj.textureGradient = await dataset.GetGradientTextureAsync(progressHandler);
+            volObj.sizeDataset = new Vector3I(dataset.dimX, dataset.dimY, dataset.dimZ);
             TransferFunction tf = new TransferFunction();
             tf.AddControlPoint(new TFColourControlPoint(0.0f, new Color(0.11f, 0.14f, 0.13f, 1.0f)));
             tf.AddControlPoint(new TFColourControlPoint(0.2415f, new Color(0.469f, 0.354f, 0.223f, 1.0f)));

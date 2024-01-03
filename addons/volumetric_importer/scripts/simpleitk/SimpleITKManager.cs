@@ -1,0 +1,117 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Net.Http;
+using System.Reflection;
+using System.Threading.Tasks;
+using Godot;
+
+namespace VolumetricRendering
+{
+    [Tool]
+    public static class SimpleITKManager
+    {
+        private static void ExtractZip(string zipPath, string extractDirPath)
+        {
+            // Extract zip
+            using FileStream zipStream = new(zipPath, FileMode.Open);
+            using ZipArchive archive = new(zipStream, ZipArchiveMode.Update);
+            if (!Directory.Exists(extractDirPath))
+            {
+                _ = Directory.CreateDirectory(extractDirPath);
+            }
+
+            foreach (ZipArchiveEntry entry in archive.Entries)
+            {
+                if (entry.Name != "" && !entry.Name.EndsWith("/"))
+                {
+                    string destFilePath = Path.Combine(extractDirPath, entry.Name);
+                    //TextAsset destAsset = new TextAsset("abc");
+                    //AssetDatabase.CreateAsset(destAsset, extractDirRelPath + "/" + entry.Name);
+                    Stream inStream = entry.Open();
+
+                    using Stream outStream = File.OpenWrite(destFilePath);
+                    inStream.CopyTo(outStream);
+                }
+            }
+        }
+        private static string GetBinaryDirectoryPath()
+        {
+            string dataPath = ProjectSettings.GlobalizePath("res://");
+            return Path.Combine(dataPath, "lib", "SimpleITK");
+        }
+        public static bool HasDownloadedBinaries()
+        {
+            string binDir = GetBinaryDirectoryPath();
+            return Directory.Exists(binDir) && Directory.GetFiles(binDir).Length > 0;
+        }
+        public static async Task DownloadFileAsync(string downloadUrl, string savePath)
+        {
+            using (System.Net.Http.HttpClient client = new())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(downloadUrl);
+                    response.EnsureSuccessStatusCode(); // Ensure the request was successful
+
+                    using (Stream contentStream = await response.Content.ReadAsStreamAsync(),
+                    fileStream = new FileStream(savePath, FileMode.Create, System.IO.FileAccess.Write, FileShare.None, 8192, true))
+                    {
+                        await contentStream.CopyToAsync(fileStream); // Save the content to the file
+                    }
+
+                    GD.Print("File downloaded successfully.");
+                }
+                catch (HttpRequestException e)
+                {
+                    GD.PrintErr($"Error downloading the file: {e.Message}");
+                }
+            }
+        }
+
+        public static async void DownloadBinaries()
+        {
+            GD.Print("Downloading SimpleITK binaries");
+            string extractDirPath = GetBinaryDirectoryPath();
+            string zipPath = Path.Combine(Directory.GetParent(extractDirPath).FullName, "SimpleITK.zip");
+            if (HasDownloadedBinaries())
+            {
+                OS.Alert("SimpleITK has already been downloaded. Redownloading will overwrite the existing binaries.", "SimpleITK");
+                ConfirmationDialog dialog = new();
+                EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
+                dialog.PopupCentered();
+            }
+#if GODOT_WINDOWS
+			const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-win64-x64.zip";
+#elif GODOT_LINUXBSD || GODOT_X11
+            const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-linux.zip";
+#elif GODOT_MACOS || GODOT_OSX
+			const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-macosx-10.9-anycpu.zip";
+#endif
+            await Task.Run(() => DownloadFileAsync(downloadURL, zipPath));
+            GD.Print("Downloading SimpleITK binaries from: " + downloadURL);
+            if (!File.Exists(zipPath))
+            {
+                GD.PrintErr("Failed to download SimpleITK binaries.");
+                return;
+            }
+            GD.Print("Extracting SimpleITK binaries");
+            try
+            {
+                ExtractZip(zipPath, extractDirPath);
+            }
+            catch (Exception e)
+            {
+                string errorString = $"Failed to download SimpleITK binaries. Error: {e.Message}"
+                + $"Please try downloading the binaries manually from {downloadURL} and extracting it to {extractDirPath}.";
+                GD.PrintErr(errorString);
+            }
+            File.Delete(zipPath);
+            GD.Print("SimpleITK binaries downloaded and extracted.");
+#if GODOT_LINUXBSD || GODOT_X11
+            GD.Print("If \"/usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so: cannot open shared object file: No such file or directory\" occurs, try running \"sudo ln /locationtonativelib/libSimpleITKCSharpNative.so /usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so");
+#endif
+        }
+    }
+}

@@ -35,6 +35,10 @@ namespace VolumetricRendering
             dock.AddChild(margin);
             VBoxContainer vbox = new();
             margin.AddChild(vbox);
+            Button SITKButton = new()
+            {
+                Text = "Download SITK"
+            };
             Button NRRDButton = new()
             {
                 Text = "Import NRRD dataset"
@@ -51,12 +55,14 @@ namespace VolumetricRendering
             progressText.FitContent = true;
             progressText.Text = "Importing...";
             progressView = new();
+            vbox.AddChild(SITKButton);
             vbox.AddChild(NRRDButton);
             vbox.AddChild(NiFTiButton);
             vbox.AddChild(DICOMButton);
             vbox.AddChild(progressText);
             vbox.AddChild(progressView);
             AddControlToDock(DockSlot.LeftUl, dock);
+            _ = SITKButton.Connect("pressed", new Callable(this, nameof(DownloadSITKBinaries)));
             _ = NRRDButton.Connect("pressed", new Callable(this, nameof(ShowOpenNRRDFilePopup)));
             _ = NiFTiButton.Connect("pressed", new Callable(this, nameof(ShowOpenNiFTiFilePopup)));
             _ = DICOMButton.Connect("pressed", new Callable(this, nameof(ShowOpenDICOMFolderPopup)));
@@ -75,7 +81,7 @@ namespace VolumetricRendering
             dialog.FileMode = EditorFileDialog.FileModeEnum.SaveFile;
             dialog.Title = windowTitle;
             _ = dialog.Connect("file_selected", new Callable(this, fileSelectedHandler));
-            GetEditorInterface().GetBaseControl().AddChild(dialog);
+            EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
             dialog.Popup(new Rect2I(50, 50, 700, 500));
         }
         private void ShowOpenFilePopup(string filter, string windowTitle, string fileSelectedHandler)
@@ -88,7 +94,7 @@ namespace VolumetricRendering
             };
             dialog.AddFilter(filter);
             _ = dialog.Connect("file_selected", new Callable(this, fileSelectedHandler));
-            GetEditorInterface().GetBaseControl().AddChild(dialog);
+            EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
             dialog.PopupCentered();
         }
         private void ShowOpenFolderPopup(string windowTitle, string folderSelectedHandler)
@@ -100,8 +106,12 @@ namespace VolumetricRendering
                 Access = EditorFileDialog.AccessEnum.Filesystem
             };
             _ = dialog.Connect("dir_selected", new Callable(this, folderSelectedHandler));
-            GetEditorInterface().GetBaseControl().AddChild(dialog);
+            EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
             dialog.PopupCentered();
+        }
+        public void DownloadSITKBinaries()
+        {
+            SimpleITKManager.DownloadBinaries();
         }
         public void ShowOpenNRRDFilePopup()
         {

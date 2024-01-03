@@ -261,7 +261,7 @@ namespace VolumetricRendering
         {
             GD.Print("Async gradient generation. Hold on.");
 
-            Format texformat = Format.Rf; //Format.Rh
+            Format texformat = Format.Rgbaf; //Format.Rh
             bool useMipmaps = false;
 
             float minValue = 0;
@@ -297,9 +297,9 @@ namespace VolumetricRendering
 
                             Color pixelColor = new Color(grad.X, grad.Y, grad.Z, (float)(data[iData] - minValue) / maxRange);
                             image.SetPixel(x, y, pixelColor);
-                            imageArray.Add(image);
                         }
                     }
+                    imageArray.Add(image);
                 }
             });
             progressHandler.EndStage();

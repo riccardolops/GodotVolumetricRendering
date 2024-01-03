@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
@@ -15,24 +15,99 @@ namespace VolumetricRendering
     {
         public TransferFunction transferFunction;
         public TransferFunction2D transferFunction2D;
-        [Export]
         public ImageTexture3D textureDataset;
-        [Export]
         public ImageTexture3D textureGradient;
-        [Export]
         public Vector3I sizeDataset;
-        [Export]
         public NoiseTexture2D noiseTexture;
         private SemaphoreSlim updateMatLock = new SemaphoreSlim(1, 1);
-        private RenderMode renderMode = RenderMode.MaximumIntensityProjectipon;
         private TFRenderMode tfRenderMode;
-        private bool lightingEnabled;
         private LightSource lightSource;
-        private Vector2 visibilityWindow = new(0.0f, 1000.0f);
-        private bool rayTerminationEnabled = false;
+        private CrossSectionManager crossSectionManager;
+        private RenderMode renderMode = RenderMode.MaximumIntensityProjection;
+        [Export]
+        public RenderMode RenderMode
+        {
+            get => renderMode;
+            set
+            {
+                renderMode = value;
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", (int)renderMode);
+            }
+        }
+        private Vector2 visibilityWindow = new(0.001f, 1.0f);
+        [Export(PropertyHint.Range, "0, 1")]
+        public Vector2 VisibilityWindow
+        {
+            get => visibilityWindow;
+            set
+            {
+                visibilityWindow = new Vector2(
+                    Mathf.Clamp(value.X, 0f, value.Y),
+                    Mathf.Clamp(value.Y, value.X, 1f)
+                );
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinVal", visibilityWindow.X);
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MaxVal", visibilityWindow.Y);
+            }
+        }
         private Vector2 gradientLightingThreshold = new Vector2(0.02f, 0.15f);
+        [Export(PropertyHint.Range, "0, 1")]
+        public Vector2 GradientLightingThreshold
+        {
+            get => gradientLightingThreshold;
+            set
+            {
+                gradientLightingThreshold = new Vector2(
+                    Mathf.Clamp(value.X, 0f, value.Y),
+                    Mathf.Clamp(value.Y, value.X, 1f)
+                );
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
+            }
+        }
         private float minGradient = 0.01f;
+        [Export(PropertyHint.Range, "0, 1")]
+        public float MinGradient
+        {
+            get => minGradient;
+            set
+            {
+                minGradient = Mathf.Clamp(value, 0f, 1f);
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinGradient", minGradient);
+            }
+        }
+        private bool rayTerminationEnabled = false;
+        [Export]
+        public bool RayTerminationEnabled
+        {
+            get => rayTerminationEnabled;
+            set
+            {
+                rayTerminationEnabled = value;
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
+            }
+        }
         private bool cubicInterpolationEnabled = false;
+        [Export]
+        public bool CubicInterpolationEnabled
+        {
+            get => cubicInterpolationEnabled;
+            set
+            {
+                cubicInterpolationEnabled = value;
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
+            }
+        }
+        private bool lightingEnabled;
+        [Export]
+        public bool LightingEnabled
+        {
+            get => lightingEnabled;
+            set
+            {
+                lightingEnabled = value;
+                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", lightingEnabled);
+            }
+        }
         public override void _EnterTree()
         {
         }
@@ -50,6 +125,15 @@ namespace VolumetricRendering
         /// <param name="delta"></param>
         public override void _Process(double delta)
         {
+        }
+        public CrossSectionManager GetCrossSectionManager()
+        {
+            if (crossSectionManager == null)
+            {
+                crossSectionManager = new CrossSectionManager();
+                AddChild(crossSectionManager);
+            }
+            return crossSectionManager;
         }
         private void UpdateMaterialProperties(IProgressHandler progressHandler = null)
         {
@@ -88,10 +172,7 @@ namespace VolumetricRendering
                 (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useTransferFunction2D", false);
             }
 
-            if (lightingEnabled)
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", true);
-            else
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", false);
+            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", lightingEnabled);
 
             if (lightSource == LightSource.SceneMainLight)
                 (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useMainLight", true);
@@ -105,7 +186,7 @@ namespace VolumetricRendering
                         (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", 1);
                         break;
                     }
-                case RenderMode.MaximumIntensityProjectipon:
+                case RenderMode.MaximumIntensityProjection:
                     {
                         (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", 0);
                         break;
@@ -124,15 +205,9 @@ namespace VolumetricRendering
             (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
             (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
 
-            if (rayTerminationEnabled)
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("RAY_TERMINATE_ON", true);
-            else
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("RAY_TERMINATE_ON", false);
+            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
 
-            if (cubicInterpolationEnabled)
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("CUBIC_INTERPOLATION_ON", true);
-            else
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("CUBIC_INTERPOLATION_ON", false);
+            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
         }
     }
 }
