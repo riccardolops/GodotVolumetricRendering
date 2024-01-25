@@ -2,4 +2,13 @@
 .godot/
 .vscode/
 .vs/
-lib/
+#lib/SimpleITK/
+lib/SimpleITK/LICENSE
+lib/SimpleITK/NOTICE
+lib/SimpleITK/SimpleITKCSharpNative.dll
+lib/SimpleITK/libSimpleITKCSharpNative.so
+lib/SimpleITK/libSimpleITKCSharpNative.dylib
+lib/SimpleITK/Readme.md
+SimpleITKCSharpNative.dll
+libSimpleITKCSharpNative.so
+libSimpleITKCSharpNative.dylib

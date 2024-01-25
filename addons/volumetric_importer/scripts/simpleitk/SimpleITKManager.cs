@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -74,16 +75,17 @@ namespace VolumetricRendering
         {
             GD.Print("Downloading SimpleITK binaries");
             string extractDirPath = GetBinaryDirectoryPath();
+            GD.Print("Downloading to: " + extractDirPath);
             string zipPath = Path.Combine(Directory.GetParent(extractDirPath).FullName, "SimpleITK.zip");
             if (HasDownloadedBinaries())
             {
                 OS.Alert("SimpleITK has already been downloaded. Redownloading will overwrite the existing binaries.", "SimpleITK");
-                ConfirmationDialog dialog = new();
-                EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
-                dialog.PopupCentered();
+                //ConfirmationDialog dialog = new();
+                //EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
+                //dialog.PopupCentered();
             }
 #if GODOT_WINDOWS
-			const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-win64-x64.zip";
+            const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-win64-x64.zip";
 #elif GODOT_LINUXBSD || GODOT_X11
             const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-linux.zip";
 #elif GODOT_MACOS || GODOT_OSX
@@ -100,6 +102,12 @@ namespace VolumetricRendering
             try
             {
                 ExtractZip(zipPath, extractDirPath);
+                string nativeLib = GetBinaryNativeLib(extractDirPath);
+                string fromPath = Path.Combine(extractDirPath, nativeLib);
+                string toPath = Path.Combine(ProjectSettings.GlobalizePath("res://"), nativeLib);
+                if (File.Exists(toPath))
+                    File.Delete(toPath);
+                File.Copy(fromPath, toPath);
             }
             catch (Exception e)
             {
@@ -112,6 +120,22 @@ namespace VolumetricRendering
 #if GODOT_LINUXBSD || GODOT_X11
             GD.Print("If \"/usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so: cannot open shared object file: No such file or directory\" occurs, try running \"sudo ln /locationtonativelib/libSimpleITKCSharpNative.so /usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so");
 #endif
+        }
+
+        private static string GetBinaryNativeLib(string folderPath)
+        {
+            string[] files = Directory.GetFiles(folderPath)
+                .Where(file => Path.GetFileName(file).Contains("Native"))
+                .ToArray();
+
+            if (files.Length > 0)
+            {
+                return Path.GetFileName(files[0]);
+            }
+            else
+            {
+                throw new FileNotFoundException("No files found with 'Native' in their names.");
+            }
         }
     }
 }
