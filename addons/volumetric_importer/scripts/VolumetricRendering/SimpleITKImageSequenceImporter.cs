@@ -26,7 +26,7 @@ namespace VolumetricRendering
 
         public class ImageSequenceSeries : IImageSequenceSeries
         {
-            public List<ImageSequenceSlice> files = new List<ImageSequenceSlice>();
+            public List<ImageSequenceSlice> files = new();
 
             public IEnumerable<IImageSequenceFile> GetFiles()
             {
@@ -51,7 +51,7 @@ namespace VolumetricRendering
 
         private List<ImageSequenceSeries> LoadSeriesInternal(IEnumerable<string> files)
         {
-            HashSet<string> directories = new HashSet<string>();
+            HashSet<string> directories = new();
 
             foreach (string file in files)
             {
@@ -60,8 +60,8 @@ namespace VolumetricRendering
                     directories.Add(dir);
             }
 
-            List<ImageSequenceSeries> seriesList = new List<ImageSequenceSeries>();
-            Dictionary<string, VectorString> directorySeries = new Dictionary<string, VectorString>();
+            List<ImageSequenceSeries> seriesList = new();
+            Dictionary<string, VectorString> directorySeries = new();
             foreach (string directory in directories)
             {
                 VectorString seriesIDs = ImageSeriesReader.GetGDCMSeriesIDs(directory);
@@ -74,11 +74,13 @@ namespace VolumetricRendering
                 foreach (string seriesID in dirSeries.Value)
                 {
                     VectorString dicom_names = ImageSeriesReader.GetGDCMSeriesFileNames(dirSeries.Key, seriesID);
-                    ImageSequenceSeries series = new ImageSequenceSeries();
+                    ImageSequenceSeries series = new();
                     foreach (string file in dicom_names)
                     {
-                        ImageSequenceSlice sliceFile = new ImageSequenceSlice();
-                        sliceFile.filePath = file;
+                        ImageSequenceSlice sliceFile = new()
+                        {
+                            filePath = file
+                        };
                         series.files.Add(sliceFile);
                     }
                     seriesList.Add(series);
@@ -95,7 +97,7 @@ namespace VolumetricRendering
             VectorString dicomNames = null;
 
             // Create dataset
-            VolumeDataset volumeDataset = new VolumeDataset();
+            VolumeDataset volumeDataset = new();
 
             ImageSequenceSeries sequenceSeries = (ImageSequenceSeries)series;
             if (sequenceSeries.files.Count == 0)
@@ -117,7 +119,7 @@ namespace VolumetricRendering
             VectorString dicomNames = null;
 
             // Create dataset
-            VolumeDataset volumeDataset = new VolumeDataset();
+            VolumeDataset volumeDataset = new();
 
             ImageSequenceSeries sequenceSeries = (ImageSequenceSeries)series;
             if (sequenceSeries.files.Count == 0)
@@ -134,7 +136,7 @@ namespace VolumetricRendering
 
         private void ImportSeriesInternal(VectorString dicomNames, ImageSequenceSeries sequenceSeries, itk.simple.Image image, VectorUInt32 size, float[] pixelData, VolumeDataset volumeDataset)
         {
-            ImageSeriesReader reader = new ImageSeriesReader();
+            ImageSeriesReader reader = new();
 
             dicomNames = new VectorString();
 

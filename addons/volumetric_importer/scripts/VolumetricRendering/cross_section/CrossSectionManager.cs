@@ -32,7 +32,7 @@ namespace VolumetricRendering
         /// Volume dataset to cross section.
         /// </summary>
         private VolumeRenderedObject targetObject;
-        private List<ICrossSectionObject> crossSectionObjects = new List<ICrossSectionObject>();
+        private List<ICrossSectionObject> crossSectionObjects = new();
         private Transform3D[] crossSectionMatrices = new Transform3D[MAX_CROSS_SECTIONS];
         private float[] crossSectionTypes = new float[MAX_CROSS_SECTIONS];
         private CrossSectionData[] crossSectionData = new CrossSectionData[MAX_CROSS_SECTIONS];
@@ -81,7 +81,7 @@ namespace VolumetricRendering
                     crossSectionTypes[i] = (int)crossSectionObject.GetCrossSectionType();
                     crossSectionData[i] = new CrossSectionData() { type = crossSectionObjects[i].GetCrossSectionType(), matrix = crossSectionMatrices[i] };
                 }
-                Projection a = new Projection();
+                Projection a = new();
                 mat.SetShaderParameter("cross_section_on", true);
                 mat.SetShaderParameter("_CrossSectionMatrices", a);
                 mat.SetShaderParameter("_CrossSectionTypes", crossSectionTypes);
@@ -94,7 +94,7 @@ namespace VolumetricRendering
         }
         public void SpawnCrossSectionPlane()
         {
-            CrossSectionPlane crossSectionPlane = new CrossSectionPlane();
+            CrossSectionPlane crossSectionPlane = new();
             AddCrossSectionObject(crossSectionPlane);
             AddChild(crossSectionPlane);
         }

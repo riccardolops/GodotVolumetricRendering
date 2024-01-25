@@ -24,7 +24,7 @@ namespace VolumetricRendering
         private string description = "";
         private float currentStageProgress = 0.0f;
         private float totalProgress = 0.0f;
-        private Stack<ProgressStage> stageStack = new Stack<ProgressStage>(3);
+        private Stack<ProgressStage> stageStack = new(3);
         private IProgressView progressView;
         private bool finished = false;
 

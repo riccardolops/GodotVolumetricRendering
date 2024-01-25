@@ -1,19 +1,33 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotVolumetricRendering", "GodotVolumetricRendering.csproj", "{3503B797-C35A-4320-8837-2D41F8D2B18B}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotVolumetricRendering", "GodotVolumetricRendering.csproj", "{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{A49EFD83-DD6E-4EAE-B703-9528E4A13902}"
+	ProjectSection(SolutionItems) = preProject
+		lib\SimpleITK\SimpleITKCSharpNative.dll = lib\SimpleITK\SimpleITKCSharpNative.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{3503B797-C35A-4320-8837-2D41F8D2B18B}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{6BBC5320-5361-4D4A-A4A9-3347ACBCFF39}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45338B3E-69FC-46C9-93F4-265BF75D5290}
 	EndGlobalSection
 EndGlobal

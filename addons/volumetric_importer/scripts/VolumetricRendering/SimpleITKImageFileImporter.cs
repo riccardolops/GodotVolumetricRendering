@@ -18,7 +18,7 @@ namespace VolumetricRendering
             VectorUInt32 size = null;
             VectorDouble spacing = null;
 
-            VolumeDataset volumeDataset = new VolumeDataset();
+            VolumeDataset volumeDataset = new();
 
             ImportInternal(volumeDataset, pixelData, size, spacing, filePath);
 
@@ -31,7 +31,7 @@ namespace VolumetricRendering
             VectorDouble spacing = null;
 
             // Create dataset
-            VolumeDataset volumeDataset = new VolumeDataset();
+            VolumeDataset volumeDataset = new();
 
             await Task.Run(() => ImportInternal(volumeDataset, pixelData, size, spacing, filePath));
 
@@ -40,7 +40,7 @@ namespace VolumetricRendering
 
         private void ImportInternal(VolumeDataset volumeDataset, float[] pixelData, VectorUInt32 size, VectorDouble spacing, string filePath)
         {
-            ImageFileReader reader = new ImageFileReader();
+            ImageFileReader reader = new();
 
             reader.SetFileName(filePath);
 

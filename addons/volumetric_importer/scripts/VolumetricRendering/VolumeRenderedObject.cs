@@ -19,7 +19,7 @@ namespace VolumetricRendering
         public ImageTexture3D textureGradient;
         public Vector3I sizeDataset;
         public NoiseTexture2D noiseTexture;
-        private SemaphoreSlim updateMatLock = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim updateMatLock = new(1, 1);
         private TFRenderMode tfRenderMode;
         private LightSource lightSource;
         private CrossSectionManager crossSectionManager;
@@ -49,7 +49,7 @@ namespace VolumetricRendering
                 (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MaxVal", visibilityWindow.Y);
             }
         }
-        private Vector2 gradientLightingThreshold = new Vector2(0.02f, 0.15f);
+        private Vector2 gradientLightingThreshold = new(0.02f, 0.15f);
         [Export(PropertyHint.Range, "0, 1")]
         public Vector2 GradientLightingThreshold
         {

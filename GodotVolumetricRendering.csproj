@@ -6,6 +6,11 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="SimpleITKCSharpManaged">
       <HintPath>lib\SimpleITK\SimpleITKCSharpManaged.dll</HintPath>
     </Reference>

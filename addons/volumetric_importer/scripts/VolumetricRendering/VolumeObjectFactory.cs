@@ -40,7 +40,7 @@ namespace VolumetricRendering
             volObj.textureDataset = await dataset.GetDataTextureAsync(progressHandler);
             volObj.textureGradient = await dataset.GetGradientTextureAsync(progressHandler);
             volObj.sizeDataset = new Vector3I(dataset.dimX, dataset.dimY, dataset.dimZ);
-            TransferFunction tf = new TransferFunction();
+            TransferFunction tf = new();
             tf.AddControlPoint(new TFColourControlPoint(0.0f, new Color(0.11f, 0.14f, 0.13f, 1.0f)));
             tf.AddControlPoint(new TFColourControlPoint(0.2415f, new Color(0.469f, 0.354f, 0.223f, 1.0f)));
             tf.AddControlPoint(new TFColourControlPoint(0.3253f, new Color(1.0f, 1.0f, 1.0f, 1.0f)));

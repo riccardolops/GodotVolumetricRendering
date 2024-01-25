@@ -17,7 +17,7 @@ namespace VolumetricRendering
             //public Rect rect;
         }
 
-        public List<TF2DBox> boxes = new List<TF2DBox>();
+        public List<TF2DBox> boxes = new();
 
         private ImageTexture texture = null;
 

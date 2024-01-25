@@ -36,7 +36,7 @@ public partial class Control : Godot.Control
     }
     public async void OnOpenNRRDDatasetResultAsync(string path)
     {
-        using (ProgressHandler progressHandler = new ProgressHandler(new AppProgressView(), "NRRD import"))
+        using (ProgressHandler progressHandler = new(new AppProgressView(), "NRRD import"))
         {
             progressHandler.ReportProgress(0.0f, "Importing NRRD dataset");
             IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);

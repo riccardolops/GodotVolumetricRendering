@@ -38,8 +38,8 @@ namespace VolumetricRendering
         private ImageTexture3D dataTexture = null;
         private ImageTexture3D gradientTexture = null;
 
-        private SemaphoreSlim createDataTextureLock = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim createGradientTextureLock = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim createDataTextureLock = new(1, 1);
+        private SemaphoreSlim createGradientTextureLock = new(1, 1);
 
         /// <summary>
         /// Gets the 3D data texture, containing the density values of the dataset.
@@ -233,7 +233,7 @@ namespace VolumetricRendering
             ImageTexture3D texture = null;
 
             progressHandler.StartStage(0.2f, "Creating texture for slice 0/" + dimZ);
-            Array<Image> imageArray = new Array<Image>();
+            Array<Image> imageArray = new();
             for (int z = 0; z < dimZ; z++)
             {
                 progressHandler.ReportProgress(z, dimZ, "Creating texture for slice");
@@ -243,7 +243,7 @@ namespace VolumetricRendering
                     for (int x = 0; x < dimX; x++)
                     {
                         float pixelValue = (float)(data[x + y * dimX + z * (dimX * dimY)] - minValue) / maxRange;
-                        Color pixelColor = new Color(pixelValue, 0.0f, 0.0f, 0.0f);
+                        Color pixelColor = new(pixelValue, 0.0f, 0.0f, 0.0f);
                         image.SetPixel(x, y, pixelColor);
                     }
                 }
@@ -281,7 +281,7 @@ namespace VolumetricRendering
             progressHandler.EndStage();
 
             progressHandler.StartStage(0.4f, "Creating gradient texture");
-            Array<Image> imageArray = new Array<Image>();
+            Array<Image> imageArray = new();
             await Task.Run(() =>
             {
                 for (int z = 0; z < dimZ; z++)
@@ -295,7 +295,7 @@ namespace VolumetricRendering
                             int iData = x + y * dimX + z * (dimX * dimY);
                             Vector3 grad = GetGrad(x, y, z, minValue, maxRange);
 
-                            Color pixelColor = new Color(grad.X, grad.Y, grad.Z, (float)(data[iData] - minValue) / maxRange);
+                            Color pixelColor = new(grad.X, grad.Y, grad.Z, (float)(data[iData] - minValue) / maxRange);
                             image.SetPixel(x, y, pixelColor);
                         }
                     }

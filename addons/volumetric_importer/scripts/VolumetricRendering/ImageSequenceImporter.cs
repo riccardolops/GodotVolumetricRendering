@@ -133,7 +133,7 @@ namespace VolumetricRendering
 		private Vector3I GetVolumeDimensions(List<string> paths)
 		{
 			Vector2I twoDimensional = GetImageDimensions(paths[0]);
-			Vector3I threeDimensional = new Vector3I()
+			Vector3I threeDimensional = new()
 			{
 				X = twoDimensional.X,
 				Y = twoDimensional.Y,
@@ -187,14 +187,14 @@ namespace VolumetricRendering
 		{
 			string name = Path.GetFileName(directoryPath);
 
-			VolumeDataset dataset = new VolumeDataset();
+			VolumeDataset dataset = new();
 			FillVolumeInternal(dataset, name, data, dimensions);
 
 			return dataset;
 		}
 		private async Task<VolumeDataset> FillVolumeDatasetAsync(int[] data, Vector3I dimensions)
 		{
-			VolumeDataset dataset = new VolumeDataset();
+			VolumeDataset dataset = new();
 			string name = Path.GetFileName(directoryPath);
 
 			await Task.Run(() => FillVolumeInternal(dataset, name, data, dimensions));

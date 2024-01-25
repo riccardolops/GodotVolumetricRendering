@@ -127,7 +127,7 @@ namespace VolumetricRendering
         }
         public async void OnOpenNRRDDatasetResultAsync(string path)
         {
-            using (ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NRRD import"))
+            using (ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NRRD import"))
             {
                 progressHandler.ReportProgress(0.0f, "Importing NRRD dataset");
                 IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);
@@ -148,7 +148,7 @@ namespace VolumetricRendering
         }
         public async void OnNiFTiFileSelected(string path)
         {
-            using (ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NiFTi import"))
+            using (ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NiFTi import"))
             {
                 progressHandler.ReportProgress(0.0f, "Importing NiFTi dataset");
                 IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
@@ -180,7 +180,7 @@ namespace VolumetricRendering
             Node root = GetTree().EditedSceneRoot;
             foreach (IImageSequenceSeries series in seriesList)
             {
-                ProgressHandler progressHandler = new ProgressHandler(new EditorProgressView(progressView, progressText), "NiFTi import");
+                ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NiFTi import");
                 progressHandler.ReportProgress(0.0f, "Importing DICOM dataset");
                 VolumeDataset dataset = await importer.ImportSeriesAsync(series);
                 // Spawn the object

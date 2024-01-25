@@ -75,9 +75,9 @@ namespace VolumetricRendering
         {
             private bool done;
             public Exception InnerException { get; set; }
-            readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
+            readonly AutoResetEvent workItemsWaiting = new(false);
             readonly Queue<Tuple<SendOrPostCallback, object>> items =
-                new Queue<Tuple<SendOrPostCallback, object>>();
+                new();
 
             public override void Send(SendOrPostCallback d, object state)
             {

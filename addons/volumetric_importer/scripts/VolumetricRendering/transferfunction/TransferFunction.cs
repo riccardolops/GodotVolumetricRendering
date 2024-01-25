@@ -6,8 +6,8 @@ namespace VolumetricRendering
 {
     public class TransferFunction
     {
-        public List<TFColourControlPoint> colourControlPoints = new List<TFColourControlPoint>();
-        public List<TFAlphaControlPoint> alphaControlPoints = new List<TFAlphaControlPoint>();
+        public List<TFColourControlPoint> colourControlPoints = new();
+        public List<TFAlphaControlPoint> alphaControlPoints = new();
 
         private GradientTexture1D textureColor = null;
         private GradientTexture1D textureAlpha = null;
@@ -46,7 +46,7 @@ namespace VolumetricRendering
             if (textureColor == null)
                 CreateTextureColor();
 
-            List<TFColourControlPoint> cols = new List<TFColourControlPoint>(colourControlPoints);
+            List<TFColourControlPoint> cols = new(colourControlPoints);
 
             // Sort lists of control points
             cols.Sort((a, b) => (a.dataValue.CompareTo(b.dataValue)));
@@ -68,7 +68,7 @@ namespace VolumetricRendering
             if (textureAlpha == null)
                 CreateTextureAlpha();
 
-            List<TFAlphaControlPoint> alphas = new List<TFAlphaControlPoint>(alphaControlPoints);
+            List<TFAlphaControlPoint> alphas = new(alphaControlPoints);
 
             // Sort lists of control points
             alphas.Sort((a, b) => (a.dataValue.CompareTo(b.dataValue)));
