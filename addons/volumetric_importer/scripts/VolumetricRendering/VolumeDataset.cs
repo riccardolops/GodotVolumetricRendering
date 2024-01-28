@@ -286,7 +286,8 @@ namespace VolumetricRendering
             {
                 for (int z = 0; z < dimZ; z++)
                 {
-                    //progressHandler.ReportProgress(z, dimZ, "Calculating gradients for slice");
+                    // TODO: try to understand why this doesn't work as intended
+                    progressHandler.ReportProgress(z, dimZ, "Calculating gradients for slice");
                     Image image = Image.Create(dimX, dimY, useMipmaps, texformat);
                     for (int y = 0; y < dimY; y++)
                     {

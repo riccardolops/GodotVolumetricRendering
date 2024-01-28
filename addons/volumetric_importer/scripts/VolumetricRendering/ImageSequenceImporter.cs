@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Godot;
 
 namespace VolumetricRendering
@@ -34,7 +33,7 @@ namespace VolumetricRendering
         }
 
         public string directoryPath;
-        private HashSet<string> supportedImageTypes = new()
+        private readonly HashSet<string> supportedImageTypes = new()
         {
             ".png",
             ".jpg",

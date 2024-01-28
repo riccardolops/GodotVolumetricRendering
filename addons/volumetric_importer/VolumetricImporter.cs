@@ -149,7 +149,7 @@ namespace VolumetricRendering
             if (dataset != null)
             {
                 Node root = GetTree().EditedSceneRoot;
-                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset);
+                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
                 root.AddChild(volObj);
                 volObj.Owner = root.GetTree().EditedSceneRoot;
             }
@@ -178,7 +178,7 @@ namespace VolumetricRendering
                 // Spawn the object
                 if (dataset != null)
                 {
-                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset);
+                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
                     volObj.Position = new Vector3(numVolumesCreated, 0, 0);
                     root.AddChild(volObj);
                     volObj.Owner = root.GetTree().EditedSceneRoot;
