@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Godot;
-using Godot.NativeInterop;
 
 namespace VolumetricRendering
 {
@@ -20,7 +17,6 @@ namespace VolumetricRendering
 
         public override void _EnterTree()
         {
-            // AddCustomType("VolumeRenderedObject", "MeshInstance3D", ResourceLoader.Load("res://addons/volumetric_importer/VolumetricRendering/VolumeRenderedObject.cs") as CSharpScript, ResourceLoader.Load("res://addons/volumetric_importer/icons/VolumeRenderedObject.svg") as Texture2D);
             dock = new()
             {
                 Name = "Volumetric Importer"
@@ -51,9 +47,11 @@ namespace VolumetricRendering
             {
                 Text = "Import DICOM dataset"
             };
-            progressText = new();
-            progressText.FitContent = true;
-            progressText.Text = "Importing...";
+            progressText = new()
+            {
+                FitContent = true,
+                Text = "Importing..."
+            };
             progressView = new();
             vbox.AddChild(SITKButton);
             vbox.AddChild(NRRDButton);
@@ -70,7 +68,6 @@ namespace VolumetricRendering
 
         public override void _ExitTree()
         {
-            // RemoveCustomType("VolumeRenderedObject");
             RemoveControlFromDocks(dock);
             dock.Free();
         }
@@ -109,7 +106,7 @@ namespace VolumetricRendering
             EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
             dialog.PopupCentered();
         }
-        public void DownloadSITKBinaries()
+        public static void DownloadSITKBinaries()
         {
             SimpleITKManager.DownloadBinaries();
         }
@@ -127,48 +124,43 @@ namespace VolumetricRendering
         }
         public async void OnOpenNRRDDatasetResultAsync(string path)
         {
-            using (ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NRRD import"))
+            using ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NRRD import");
+            progressHandler.ReportProgress(0.0f, "Importing NRRD dataset");
+            IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);
+            VolumeDataset dataset = await importer.ImportAsync(path);
+            if (dataset != null)
             {
-                progressHandler.ReportProgress(0.0f, "Importing NRRD dataset");
-                IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NRRD);
-                VolumeDataset dataset = await importer.ImportAsync(path);
-                if (dataset != null)
-                {
-                    Node root = GetTree().EditedSceneRoot;
-                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
-                    root.AddChild(volObj);
-                    volObj.Owner = root.GetTree().EditedSceneRoot;
-                }
-                else
-                {
-                    GD.PrintErr("Failed to import NRRD dataset");
-                }
+                Node root = GetTree().EditedSceneRoot;
+                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
+                root.AddChild(volObj);
+                volObj.Owner = root.GetTree().EditedSceneRoot;
             }
-
+            else
+            {
+                GD.PrintErr("Failed to import NRRD dataset");
+            }
         }
         public async void OnNiFTiFileSelected(string path)
         {
-            using (ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NiFTi import"))
+            using ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NiFTi import");
+            progressHandler.ReportProgress(0.0f, "Importing NiFTi dataset");
+            IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
+            VolumeDataset dataset = await importer.ImportAsync(path);
+            if (dataset != null)
             {
-                progressHandler.ReportProgress(0.0f, "Importing NiFTi dataset");
-                IImageFileImporter importer = ImporterFactory.CreateImageFileImporter(ImageFileFormat.NIFTI);
-                VolumeDataset dataset = await importer.ImportAsync(path);
-                if (dataset != null)
-                {
-                    Node root = GetTree().EditedSceneRoot;
-                    VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
-                    root.AddChild(volObj);
-                    volObj.Owner = root.GetTree().EditedSceneRoot;
-                }
-                else
-                {
-                    GD.PrintErr("Failed to import NiFTi dataset");
-                }
+                Node root = GetTree().EditedSceneRoot;
+                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset);
+                root.AddChild(volObj);
+                volObj.Owner = root.GetTree().EditedSceneRoot;
+            }
+            else
+            {
+                GD.PrintErr("Failed to import NiFTi dataset");
             }
         }
         public async void OnDICOMFolderSelected(string path)
         {
-            bool recursive = true;
+            const bool recursive = true;
             // Read all files
             IEnumerable<string> fileCandidates = Directory.EnumerateFiles(path, "*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                 .Where(p => p.EndsWith(".dcm", StringComparison.InvariantCultureIgnoreCase) || p.EndsWith(".dicom", StringComparison.InvariantCultureIgnoreCase) || p.EndsWith(".dicm", StringComparison.InvariantCultureIgnoreCase));

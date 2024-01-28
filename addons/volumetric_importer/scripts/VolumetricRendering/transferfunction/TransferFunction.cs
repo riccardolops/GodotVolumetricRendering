@@ -28,7 +28,6 @@ namespace VolumetricRendering
 
         public GradientTexture1D GetTextureColor()
         {
-            GD.Print("GetTexture");
             if (textureColor == null)
                 GenerateTextureColor();
             return textureColor;
@@ -36,7 +35,6 @@ namespace VolumetricRendering
 
         public GradientTexture1D GetTextureAlpha()
         {
-            GD.Print("GetTexture");
             if (textureAlpha == null)
                 GenerateTextureAlpha();
             return textureAlpha;

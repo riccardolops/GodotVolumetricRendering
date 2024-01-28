@@ -140,7 +140,7 @@ namespace VolumetricRendering
         }
         private void UpdateMaterialProperties(IProgressHandler progressHandler = null)
         {
-            Task task = UpdateMaterialPropertiesAsync(progressHandler);
+            _ = UpdateMaterialPropertiesAsync(progressHandler);
         }
         private async Task UpdateMaterialPropertiesAsync(IProgressHandler progressHandler = null)
         {
@@ -160,16 +160,13 @@ namespace VolumetricRendering
         }
         private void UpdateMatInternal()
         {
-            GD.Print("UpdateMatInternal");
             if (tfRenderMode == TFRenderMode.TF2D)
             {
-                GD.Print("TF2D");
                 volumeMaterial.SetShaderParameter("transferfunctionSampler", transferFunction2D.GetTexture());
                 volumeMaterial.SetShaderParameter("useTransferFunction2D", true);
             }
             else
             {
-                GD.Print("TF1D");
                 volumeMaterial.SetShaderParameter("transferfunctionSamplerColor", transferFunction.GetTextureColor());
                 volumeMaterial.SetShaderParameter("transferfunctionSamplerAlpha", transferFunction.GetTextureAlpha());
                 volumeMaterial.SetShaderParameter("useTransferFunction2D", false);

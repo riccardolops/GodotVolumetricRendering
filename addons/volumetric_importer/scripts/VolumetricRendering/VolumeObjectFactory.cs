@@ -9,15 +9,18 @@ namespace VolumetricRendering
     {
         public static VolumeRenderedObject CreateObject(VolumeDataset dataset)
         {
-            VolumeRenderedObject volObj = new();
-            volObj.Name = "VolumeRenderedObject_" + dataset.datasetName;
-            volObj.Scale = dataset.scale;
-            // volObj.RotationDegrees = dataset.rotation.GetEuler();
-            volObj.Mesh = new BoxMesh
+            VolumeRenderedObject volObj = new()
             {
-                FlipFaces = true
+                Name = "VolumeRenderedObject_" + dataset.datasetName,
+                Scale = dataset.scale,
+                Mesh = new BoxMesh
+                {
+                    FlipFaces = true
+                }
             };
-            volObj.Mesh.SurfaceSetMaterial(0, ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres"));
+            Material mat = ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres");
+            mat = mat.Duplicate() as Material;
+            volObj.Mesh.SurfaceSetMaterial(0, mat);
             volObj.textureDataset = dataset.GetDataTexture();
             volObj.textureGradient = dataset.GetGradientTexture();
             volObj.sizeDataset = new Vector3I(dataset.dimX, dataset.dimY, dataset.dimZ);

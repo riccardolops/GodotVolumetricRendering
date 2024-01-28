@@ -14,31 +14,24 @@ namespace VolumetricRendering
     {
         public VolumeDataset Import(string filePath)
         {
-            float[] pixelData = null;
-            VectorUInt32 size = null;
-            VectorDouble spacing = null;
-
+            // Create dataset
             VolumeDataset volumeDataset = new();
 
-            ImportInternal(volumeDataset, pixelData, size, spacing, filePath);
+            ImportInternal(volumeDataset, filePath);
 
             return volumeDataset;
         }
         public async Task<VolumeDataset> ImportAsync(string filePath)
         {
-            float[] pixelData = null;
-            VectorUInt32 size = null;
-            VectorDouble spacing = null;
-
             // Create dataset
             VolumeDataset volumeDataset = new();
 
-            await Task.Run(() => ImportInternal(volumeDataset, pixelData, size, spacing, filePath));
+            await Task.Run(() => ImportInternal(volumeDataset, filePath));
 
             return volumeDataset;
         }
 
-        private void ImportInternal(VolumeDataset volumeDataset, float[] pixelData, VectorUInt32 size, VectorDouble spacing, string filePath)
+        private static void ImportInternal(VolumeDataset volumeDataset, string filePath)
         {
             ImageFileReader reader = new();
 
@@ -52,18 +45,18 @@ namespace VolumetricRendering
             // Cast to 32-bit float
             image = SimpleITK.Cast(image, PixelIDValueEnum.sitkFloat32);
 
-            size = image.GetSize();
+            VectorUInt32 size = image.GetSize();
 
             int numPixels = 1;
             for (int dim = 0; dim < image.GetDimension(); dim++)
                 numPixels *= (int)size[dim];
 
             // Read pixel data
-            pixelData = new float[numPixels];
+            float[] pixelData = new float[numPixels];
             IntPtr imgBuffer = image.GetBufferAsFloat();
             Marshal.Copy(imgBuffer, pixelData, 0, numPixels);
 
-            spacing = image.GetSpacing();
+            VectorDouble spacing = image.GetSpacing();
 
             volumeDataset.data = pixelData;
             volumeDataset.dimX = (int)size[0];
