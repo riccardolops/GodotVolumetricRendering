@@ -31,7 +31,7 @@ namespace VolumetricRendering
             set
             {
                 renderMode = value;
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", (int)renderMode);
+                volumeMaterial.SetShaderParameter("MODE", (int)renderMode);
             }
         }
         private Vector2 visibilityWindow = new(0.001f, 1.0f);
@@ -45,8 +45,8 @@ namespace VolumetricRendering
                     Mathf.Clamp(value.X, 0f, value.Y),
                     Mathf.Clamp(value.Y, value.X, 1f)
                 );
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinVal", visibilityWindow.X);
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MaxVal", visibilityWindow.Y);
+                volumeMaterial.SetShaderParameter("_MinVal", visibilityWindow.X);
+                volumeMaterial.SetShaderParameter("_MaxVal", visibilityWindow.Y);
             }
         }
         private Vector2 gradientLightingThreshold = new(0.02f, 0.15f);
@@ -60,8 +60,8 @@ namespace VolumetricRendering
                     Mathf.Clamp(value.X, 0f, value.Y),
                     Mathf.Clamp(value.Y, value.X, 1f)
                 );
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
+                volumeMaterial.SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
+                volumeMaterial.SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
             }
         }
         private float minGradient = 0.01f;
@@ -72,7 +72,7 @@ namespace VolumetricRendering
             set
             {
                 minGradient = Mathf.Clamp(value, 0f, 1f);
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinGradient", minGradient);
+                volumeMaterial.SetShaderParameter("_MinGradient", minGradient);
             }
         }
         private bool rayTerminationEnabled = false;
@@ -83,7 +83,7 @@ namespace VolumetricRendering
             set
             {
                 rayTerminationEnabled = value;
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
+                volumeMaterial.SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
             }
         }
         private bool cubicInterpolationEnabled = false;
@@ -94,7 +94,7 @@ namespace VolumetricRendering
             set
             {
                 cubicInterpolationEnabled = value;
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
+                volumeMaterial.SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
             }
         }
         private bool lightingEnabled;
@@ -105,11 +105,14 @@ namespace VolumetricRendering
             set
             {
                 lightingEnabled = value;
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", lightingEnabled);
+                volumeMaterial.SetShaderParameter("useLighting", lightingEnabled);
             }
         }
+        [Export]
+        public ShaderMaterial volumeMaterial;
         public override void _EnterTree()
         {
+            volumeMaterial ??= GetActiveMaterial(0) as ShaderMaterial;
         }
         /// <summary>
         /// Called when the node enters the scene tree for the first time.
@@ -144,10 +147,10 @@ namespace VolumetricRendering
             await updateMatLock.WaitAsync();
             try
             {
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("volumeDataSampler", textureDataset);
+                volumeMaterial.SetShaderParameter("volumeDataSampler", textureDataset);
                 bool useGradientTexture = tfRenderMode == TFRenderMode.TF2D || renderMode == RenderMode.IsosurfaceRendering || lightingEnabled;
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("volumeGradientSampler", textureGradient);
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("noiseSampler", noiseTexture);
+                volumeMaterial.SetShaderParameter("volumeGradientSampler", textureGradient);
+                volumeMaterial.SetShaderParameter("noiseSampler", noiseTexture);
                 UpdateMatInternal();
             }
             finally
@@ -161,53 +164,53 @@ namespace VolumetricRendering
             if (tfRenderMode == TFRenderMode.TF2D)
             {
                 GD.Print("TF2D");
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("transferfunctionSampler", transferFunction2D.GetTexture());
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useTransferFunction2D", true);
+                volumeMaterial.SetShaderParameter("transferfunctionSampler", transferFunction2D.GetTexture());
+                volumeMaterial.SetShaderParameter("useTransferFunction2D", true);
             }
             else
             {
                 GD.Print("TF1D");
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("transferfunctionSamplerColor", transferFunction.GetTextureColor());
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("transferfunctionSamplerAlpha", transferFunction.GetTextureAlpha());
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useTransferFunction2D", false);
+                volumeMaterial.SetShaderParameter("transferfunctionSamplerColor", transferFunction.GetTextureColor());
+                volumeMaterial.SetShaderParameter("transferfunctionSamplerAlpha", transferFunction.GetTextureAlpha());
+                volumeMaterial.SetShaderParameter("useTransferFunction2D", false);
             }
 
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useLighting", lightingEnabled);
+            volumeMaterial.SetShaderParameter("useLighting", lightingEnabled);
 
             if (lightSource == LightSource.SceneMainLight)
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useMainLight", true);
+                volumeMaterial.SetShaderParameter("useMainLight", true);
             else
-                (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("useMainLight", false);
+                volumeMaterial.SetShaderParameter("useMainLight", false);
 
             switch (renderMode)
             {
                 case RenderMode.DirectVolumeRendering:
                     {
-                        (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", 1);
+                        volumeMaterial.SetShaderParameter("MODE", 1);
                         break;
                     }
                 case RenderMode.MaximumIntensityProjection:
                     {
-                        (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", 0);
+                        volumeMaterial.SetShaderParameter("MODE", 0);
                         break;
                     }
                 case RenderMode.IsosurfaceRendering:
                     {
-                        (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("MODE", 2);
+                        volumeMaterial.SetShaderParameter("MODE", 2);
                         break;
                     }
             }
 
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinVal", visibilityWindow.X);
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MaxVal", visibilityWindow.Y);
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_MinGradient", minGradient);
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_TextureSize", sizeDataset);
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
+            volumeMaterial.SetShaderParameter("_MinVal", visibilityWindow.X);
+            volumeMaterial.SetShaderParameter("_MaxVal", visibilityWindow.Y);
+            volumeMaterial.SetShaderParameter("_MinGradient", minGradient);
+            volumeMaterial.SetShaderParameter("_TextureSize", sizeDataset);
+            volumeMaterial.SetShaderParameter("_LightingGradientThresholdStart", gradientLightingThreshold.X);
+            volumeMaterial.SetShaderParameter("_LightingGradientThresholdEnd", gradientLightingThreshold.Y);
 
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
+            volumeMaterial.SetShaderParameter("earlyRayTermianation", rayTerminationEnabled);
 
-            (GetActiveMaterial(0) as ShaderMaterial).SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
+            volumeMaterial.SetShaderParameter("cubicInterpolation", cubicInterpolationEnabled);
         }
     }
 }

@@ -35,7 +35,9 @@ namespace VolumetricRendering
                     {
                         FlipFaces = true
                     };
-                    volObj.Mesh.SurfaceSetMaterial(0, ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres"));
+                    Material mat = ResourceLoader.Load<Material>("res://addons/volumetric_importer/materials/raymarch_material.tres");
+                    mat = mat.Duplicate() as Material;
+                    volObj.Mesh.SurfaceSetMaterial(0, mat);
                 });
             volObj.textureDataset = await dataset.GetDataTextureAsync(progressHandler);
             volObj.textureGradient = await dataset.GetGradientTextureAsync(progressHandler);
