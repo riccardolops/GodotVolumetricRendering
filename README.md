@@ -18,10 +18,10 @@ This repository builds upon the [work by Matias Lavik](https://github.com/mlavik
 - [x] Lighting*
 - [x] Transfer function editor*
 - [x] Cubic sampling
+- [x] Loading of RAW datasets
 
 ## Features yet to be ported over
 
-- [ ] Loading of RAW datasets
 - [ ] Cutout/clipping tools
 - [ ] A cooler way to edit the transfer function with the histogram of the density values
 - [ ] Lighting camera dependent
