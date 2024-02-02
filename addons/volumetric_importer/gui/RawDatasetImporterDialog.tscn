@@ -1,0 +1,124 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddah5ilvre47b"]
+
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/Importers/RawDatasetImporterControl.cs" id="1_belts"]
+
+[node name="RawDatasetImporterControl" type="Control" node_paths=PackedStringArray("ctrlDimX", "ctrlDimY", "ctrlDimZ", "ctrlBytesToSkip", "ctrlDataFormat", "ctrlEndianness")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 193.0
+offset_bottom = 107.0
+script = ExtResource("1_belts")
+ctrlDimX = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer/SpinBox")
+ctrlDimY = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer2/SpinBox")
+ctrlDimZ = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer3/SpinBox")
+ctrlBytesToSkip = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer6/SpinBox")
+ctrlDataFormat = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer4/OptionButton")
+ctrlEndianness = NodePath("Panel/MarginContainer/VBoxContainer/HBoxContainer5/OptionButton")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 203.0
+offset_bottom = 96.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Dim x:"
+
+[node name="SpinBox" type="SpinBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+max_value = 2048.0
+value = 256.0
+rounded = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Dim y:"
+
+[node name="SpinBox" type="SpinBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+max_value = 2048.0
+value = 256.0
+rounded = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Dim z:"
+
+[node name="SpinBox" type="SpinBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+max_value = 2048.0
+value = 256.0
+rounded = true
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+text = "Bytes to skip:"
+
+[node name="SpinBox" type="SpinBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+max_value = 2048.0
+value = 256.0
+rounded = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Data format:"
+
+[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+item_count = 6
+selected = 0
+popup/item_0/text = "Int8"
+popup/item_0/id = 0
+popup/item_1/text = "Uint8"
+popup/item_1/id = 1
+popup/item_2/text = "Int16"
+popup/item_2/id = 2
+popup/item_3/text = "Uint16"
+popup/item_3/id = 3
+popup/item_4/text = "Int32"
+popup/item_4/id = 4
+popup/item_5/text = "Uint32"
+popup/item_5/id = 5
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Endianness:"
+
+[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "LittleEndian"
+popup/item_0/id = 0
+popup/item_1/text = "BigEndian"
+popup/item_1/id = 1
