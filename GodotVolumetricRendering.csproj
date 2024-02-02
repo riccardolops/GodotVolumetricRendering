@@ -5,22 +5,7 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
-  <PropertyGroup>
-    <DefineConstants Condition="Exists('lib\SimpleITK\SimpleITKCSharpManaged.dll')">$(DefineConstants);GVR_USE_SIMPLEITK</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\SimpleITKCSharpNative.dll')">
-    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\libSimpleITKCSharpNative.so')">
-    <Content Include="lib\SimpleITK\libSimpleITKCSharpNative.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\SimpleITKCSharpManaged.dll')">
-    <Reference Include="SimpleITKCSharpManaged">
-      <HintPath>lib\SimpleITK\SimpleITKCSharpManaged.dll</HintPath>
-    </Reference>
+  <ItemGroup>
+    <ProjectReference Include="addons/volumetric_importer\VolumetricImporter.csproj" />
   </ItemGroup>
 </Project>
