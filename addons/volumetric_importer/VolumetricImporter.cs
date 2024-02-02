@@ -47,6 +47,10 @@ namespace VolumetricRendering
             {
                 Text = "Import DICOM dataset"
             };
+            Button rawButton = new()
+            {
+                Text = "Import raw dataset"
+            };
             progressText = new()
             {
                 FitContent = true,
@@ -57,6 +61,7 @@ namespace VolumetricRendering
             vbox.AddChild(NRRDButton);
             vbox.AddChild(NiFTiButton);
             vbox.AddChild(DICOMButton);
+            vbox.AddChild(rawButton);
             vbox.AddChild(progressText);
             vbox.AddChild(progressView);
             AddControlToDock(DockSlot.LeftUl, dock);
@@ -64,6 +69,7 @@ namespace VolumetricRendering
             _ = NRRDButton.Connect("pressed", new Callable(this, nameof(ShowOpenNRRDFilePopup)));
             _ = NiFTiButton.Connect("pressed", new Callable(this, nameof(ShowOpenNiFTiFilePopup)));
             _ = DICOMButton.Connect("pressed", new Callable(this, nameof(ShowOpenDICOMFolderPopup)));
+            _ = rawButton.Connect("pressed", new Callable(this, nameof(ShowOpenRawFilePopup)));
         }
 
         public override void _ExitTree()
@@ -121,6 +127,10 @@ namespace VolumetricRendering
         public void ShowOpenDICOMFolderPopup()
         {
             ShowOpenFolderPopup("Open DICOM Folder", nameof(OnDICOMFolderSelected));
+        }
+        public void ShowOpenRawFilePopup()
+        {
+            ShowOpenFilePopup("*.*", "Open raw File", nameof(OnRawFileSelected));
         }
         public async void OnOpenNRRDDatasetResultAsync(string path)
         {
@@ -184,6 +194,32 @@ namespace VolumetricRendering
                     volObj.Owner = root.GetTree().EditedSceneRoot;
                     numVolumesCreated++;
                 }
+            }
+        }
+        public void OnRawFileSelected(string path)
+        {
+            RawDatasetImporterDialog importerDialog = new RawDatasetImporterDialog(path, 128, 256, 256, DataContentFormat.Uint8, Endianness.LittleEndian, 0);
+            importerDialog.Title = "Raw dataset import settings";
+            importerDialog.onConfirmed += ImportRawDataset;
+            EditorInterface.Singleton.GetEditorViewport3D().AddChild(importerDialog);
+            importerDialog.PopupCentered(new Vector2I(400, 300));
+        }
+        public async void ImportRawDataset(RawDatasetImporter importer)
+        {
+            using ProgressHandler progressHandler = new(new EditorProgressView(progressView, progressText), "NiFTi import");
+            progressHandler.ReportProgress(0.0f, "Importing raw dataset");
+
+            VolumeDataset dataset = await importer.ImportAsync();
+            if (dataset != null)
+            {
+                Node root = GetTree().EditedSceneRoot;
+                VolumeRenderedObject volObj = await VolumeObjectFactory.CreateObjectAsync(dataset, progressHandler);
+                root.AddChild(volObj);
+                volObj.Owner = root.GetTree().EditedSceneRoot;
+            }
+            else
+            {
+                GD.PrintErr("Failed to import NiFTi dataset");
             }
         }
     }
