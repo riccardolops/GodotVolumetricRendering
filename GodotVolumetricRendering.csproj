@@ -5,7 +5,7 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(GodotTargetPlatform)' == 'windows' and Exists('lib\SimpleITK\SimpleITKCSharpNative.dll')">
     <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
