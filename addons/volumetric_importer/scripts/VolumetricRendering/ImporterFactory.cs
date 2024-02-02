@@ -58,10 +58,12 @@ namespace VolumetricRendering
                     {
                         return typeof(ImageSequenceImporter);
                     }
+#if GVR_USE_SIMPLEITK
                 case ImageSequenceFormat.DICOM:
                     {
                         return typeof(SimpleITKImageSequenceImporter);
                     }
+#endif
                 default:
                     return null;
             }
@@ -71,6 +73,7 @@ namespace VolumetricRendering
         {
             switch (format)
             {
+#if GVR_USE_SIMPLEITK
                 case ImageFileFormat.NRRD:
                     {
                         return typeof(SimpleITKImageFileImporter);
@@ -79,6 +82,7 @@ namespace VolumetricRendering
                     {
                         return typeof(SimpleITKImageFileImporter);
                     }
+#endif
                 default:
                     return null;
             }

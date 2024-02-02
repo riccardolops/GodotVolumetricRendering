@@ -1,3 +1,4 @@
+#if GVR_USE_SIMPLEITK
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -77,3 +78,4 @@ namespace VolumetricRendering
         }
     }
 }
+#endif
