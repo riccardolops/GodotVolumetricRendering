@@ -1,3 +1,4 @@
+#if GVR_USE_SIMPLEITK
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -184,3 +185,4 @@ namespace VolumetricRendering
         }
     }
 }
+#endif

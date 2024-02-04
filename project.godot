@@ -21,7 +21,3 @@ window/subwindows/embed_subwindows=false
 [dotnet]
 
 project/assembly_name="GodotVolumetricRendering"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/volumetric_importer/plugin.cfg")
