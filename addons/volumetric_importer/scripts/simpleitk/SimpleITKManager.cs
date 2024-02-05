@@ -68,12 +68,14 @@ namespace VolumetricRendering
                 }
             }
         }
-
-        public static async void DownloadBinaries()
+        public static async void DownloadBinaries(Callable buildCallback)
         {
             GD.Print("Downloading SimpleITK binaries");
             string extractDirPath = GetBinaryDirectoryPath();
-            GD.Print("Downloading to: " + extractDirPath);
+            if (!Directory.Exists(extractDirPath))
+            {
+                Directory.CreateDirectory(extractDirPath);
+            }
             string zipPath = Path.Combine(Directory.GetParent(extractDirPath).FullName, "SimpleITK.zip");
             if (HasDownloadedBinaries())
             {
@@ -89,8 +91,9 @@ namespace VolumetricRendering
 #elif GODOT_MACOS || GODOT_OSX
 			const string downloadURL = "https://github.com/SimpleITK/SimpleITK/releases/download/v2.3.1/SimpleITK-2.3.1-CSharp-macosx-10.9-anycpu.zip";
 #endif
+            GD.Print("From: " + downloadURL);
+            GD.Print("To: " + extractDirPath);
             await Task.Run(() => DownloadFileAsync(downloadURL, zipPath));
-            GD.Print("Downloading SimpleITK binaries from: " + downloadURL);
             if (!File.Exists(zipPath))
             {
                 GD.PrintErr("Failed to download SimpleITK binaries.");
@@ -114,12 +117,11 @@ namespace VolumetricRendering
                 GD.PrintErr(errorString);
             }
             File.Delete(zipPath);
-            GD.Print("SimpleITK binaries downloaded and extracted.");
+            buildCallback.Call();
 #if GODOT_LINUXBSD || GODOT_X11
             GD.Print("If \"/usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so: cannot open shared object file: No such file or directory\" occurs, try running \"sudo ln /locationtonativelib/libSimpleITKCSharpNative.so /usr/share/dotnet/shared/Microsoft.NETCore.App/8.0.0/libSimpleITKCSharpNative.so");
 #endif
         }
-
         private static string GetBinaryNativeLib(string folderPath)
         {
             string[] files = Directory.GetFiles(folderPath)

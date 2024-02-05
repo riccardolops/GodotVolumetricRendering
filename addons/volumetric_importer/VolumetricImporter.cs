@@ -14,6 +14,7 @@ namespace VolumetricRendering
         private EditorFileDialog dialog;
         private ProgressBar progressView;
         private RichTextLabel progressText;
+        private Callable _buildCallable;
 
         public override void _EnterTree()
         {
@@ -70,6 +71,7 @@ namespace VolumetricRendering
             _ = NiFTiButton.Connect("pressed", new Callable(this, nameof(ShowOpenNiFTiFilePopup)));
             _ = DICOMButton.Connect("pressed", new Callable(this, nameof(ShowOpenDICOMFolderPopup)));
             _ = rawButton.Connect("pressed", new Callable(this, nameof(ShowOpenRawFilePopup)));
+            FindEditorBuildShortcut();
         }
 
         public override void _ExitTree()
@@ -112,9 +114,9 @@ namespace VolumetricRendering
             EditorInterface.Singleton.GetBaseControl().AddChild(dialog);
             dialog.PopupCentered();
         }
-        public static void DownloadSITKBinaries()
+        public void DownloadSITKBinaries()
         {
-            SimpleITKManager.DownloadBinaries();
+            SimpleITKManager.DownloadBinaries(_buildCallable);
         }
         public void ShowOpenNRRDFilePopup()
         {
@@ -220,6 +222,21 @@ namespace VolumetricRendering
             else
             {
                 GD.PrintErr("Failed to import NiFTi dataset");
+            }
+        }
+        void FindEditorBuildShortcut()
+        {
+            // See https://github.com/lewiji/RebuildCsOnFocus/blob/main/addons/rebuild_cs_on_focus/RebuildCsPlugin.cs
+            var node = new Control();
+            AddControlToBottomPanel(node, "");
+            var bottomBar = node.GetParent();
+            RemoveControlFromBottomPanel(node);
+            node.QueueFree();
+            var msBuildPanel = bottomBar.GetChildren()
+               .FirstOrDefault(c => c is MarginContainer && c.HasMethod("RebuildProject"));
+            if (msBuildPanel != null)
+            {
+                _buildCallable = new Callable(msBuildPanel, "RebuildProject");
             }
         }
     }
