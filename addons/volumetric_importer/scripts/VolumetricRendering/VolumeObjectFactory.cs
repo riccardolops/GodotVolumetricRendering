@@ -57,6 +57,7 @@ namespace VolumetricRendering
             tf.AddControlPoint(new TFAlphaControlPoint(0.4f, 0.546f));
             tf.AddControlPoint(new TFAlphaControlPoint(0.547f, 0.5266f));
 
+            volObj.dataset = dataset;
             volObj.transferFunction = tf;
 
             NoiseTexture2D noiseTexture = NoiseTextureGenerator.GenerateNoiseTexture(512, 512);

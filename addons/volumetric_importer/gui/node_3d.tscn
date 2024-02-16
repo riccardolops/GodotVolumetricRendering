@@ -1,0 +1,47 @@
+[gd_scene load_steps=9 format=3 uid="uid://klkj73y8y03y"]
+
+[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/raymarch.gdshader" id="1_lgrj0"]
+[ext_resource type="Gradient" uid="uid://8y6h4mdnbexq" path="res://addons/volumetric_importer/materials/default_alpha_gradient.tres" id="2_1nmmh"]
+[ext_resource type="Gradient" uid="uid://ba4sy58gn7s0s" path="res://addons/volumetric_importer/materials/default_color_gradient.tres" id="3_bhnot"]
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/VolumeRenderedObject.cs" id="4_v2whg"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mowvd"]
+gradient = ExtResource("2_1nmmh")
+width = 512
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yxpqc"]
+gradient = ExtResource("3_bhnot")
+width = 512
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kxtdb"]
+render_priority = 0
+shader = ExtResource("1_lgrj0")
+shader_parameter/_MinVal = 0.001
+shader_parameter/_MaxVal = 1.0
+shader_parameter/_MinGradient = 0.01
+shader_parameter/_TextureSize = null
+shader_parameter/_LightingGradientThresholdStart = 0.02
+shader_parameter/_LightingGradientThresholdEnd = 0.15
+shader_parameter/useTransferFunction2D = false
+shader_parameter/useLighting = false
+shader_parameter/useMainLight = false
+shader_parameter/earlyRayTermianation = false
+shader_parameter/cubicInterpolation = false
+shader_parameter/cross_section_on = false
+shader_parameter/_NumCrossSections = null
+shader_parameter/_CrossSectionMatrices = null
+shader_parameter/_CrossSectionTypes = null
+shader_parameter/MODE = 0
+shader_parameter/transferfunctionSamplerColor = SubResource("GradientTexture1D_yxpqc")
+shader_parameter/transferfunctionSamplerAlpha = SubResource("GradientTexture1D_mowvd")
+
+[sub_resource type="BoxMesh" id="BoxMesh_x36w3"]
+material = SubResource("ShaderMaterial_kxtdb")
+flip_faces = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="VolumeRenderedObject_VisMale_raw" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("BoxMesh_x36w3")
+script = ExtResource("4_v2whg")

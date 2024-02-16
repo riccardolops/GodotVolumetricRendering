@@ -1,0 +1,62 @@
+[gd_scene load_steps=6 format=3 uid="uid://c3nk0k7b4r7c"]
+
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/TransferFunctionEditor.cs" id="1_5qtx5"]
+[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/TransferFunctionEditor.gdshader" id="2_ikujj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qpijs"]
+shader = ExtResource("2_ikujj")
+
+[sub_resource type="Gradient" id="Gradient_js6fr"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rlywn"]
+gradient = SubResource("Gradient_js6fr")
+
+[node name="TransferFunctionEditor" type="Panel" node_paths=PackedStringArray("alphaPanel", "histogramTextureRect", "paletteTextureRect")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -128.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5qtx5")
+alphaPanel = NodePath("AlphaPanel")
+histogramTextureRect = NodePath("AlphaPanel/Histogram")
+paletteTextureRect = NodePath("ColourPanel/Palette")
+
+[node name="AlphaPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -249.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Histogram" type="TextureRect" parent="AlphaPanel"]
+material = SubResource("ShaderMaterial_qpijs")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_rlywn")
+
+[node name="ColourPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 521.0
+offset_bottom = -132.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Palette" type="TextureRect" parent="ColourPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
