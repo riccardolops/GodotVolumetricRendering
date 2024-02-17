@@ -29,6 +29,7 @@ namespace VolumetricRendering
 
 		private void InitialiseContent()
 		{
+			GD.Print("UpdatePoints");
 			if (histogramTextureRect != null && targetObject != null)
 			{
 				histogramTextureRect.Texture = HistogramTextureGenerator.GenerateHistogramTexture(targetObject.dataset);
@@ -50,6 +51,7 @@ namespace VolumetricRendering
 
 		private void UpdatePoints()
 		{
+			GD.Print("UpdatePoints");
 			while (alphaControls.Count < transferFunction.alphaControlPoints.Count)
 			{
 				MovablePanel alphaControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/AlphaControl.tscn").Instantiate<MovablePanel>();

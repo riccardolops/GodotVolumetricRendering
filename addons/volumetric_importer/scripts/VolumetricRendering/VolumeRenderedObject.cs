@@ -109,10 +109,6 @@ namespace VolumetricRendering
 				volumeMaterial.SetShaderParameter("useLighting", lightingEnabled);
 			}
 		}
-		[Export]
-		private Gradient transferFunctionColor = ResourceLoader.Load<Gradient>("res://addons/volumetric_importer/materials/default_color_gradient.tres");
-		[Export]
-		private Gradient transferFunctionAlpha = ResourceLoader.Load<Gradient>("res://addons/volumetric_importer/materials/default_alpha_gradient.tres");
 		public ShaderMaterial volumeMaterial;
 		public override void _EnterTree()
 		{
@@ -171,8 +167,6 @@ namespace VolumetricRendering
 			}
 			else
 			{
-				transferFunction.GetTextureColor().Gradient = transferFunctionColor;
-				transferFunction.GetTextureAlpha().Gradient = transferFunctionAlpha;
 				volumeMaterial.SetShaderParameter("transferfunctionSamplerColor", transferFunction.GetTextureColor());
 				volumeMaterial.SetShaderParameter("transferfunctionSamplerAlpha", transferFunction.GetTextureAlpha());
 				volumeMaterial.SetShaderParameter("useTransferFunction2D", false);
