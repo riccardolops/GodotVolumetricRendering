@@ -23,7 +23,9 @@ namespace VolumetricRendering
 		[Export]
 		public VolumeRenderedObject targetObject;
 
-		private TransferFunction transferFunction;
+		[Export]
+		public TransferFunction transferFunction;
+
 		private List<MovablePanel> alphaControls = new List<MovablePanel>();
 		private List<MovablePanel> colourControls = new List<MovablePanel>();
 
@@ -40,7 +42,7 @@ namespace VolumetricRendering
 				}
 			}
 
-			if (paletteTextureRect != null)
+			if (paletteTextureRect != null && transferFunction != null)
 			{
 				paletteTextureRect.Texture = transferFunction.GetTextureColor();
 			}
@@ -48,16 +50,16 @@ namespace VolumetricRendering
 			UpdatePoints();
 		}
 
-		private void UpdatePoints()
+		private void UpdateAlphaPoints()
 		{
-			while (alphaControls.Count < transferFunction.alphaControlPoints.Count)
+			while (alphaControls.Count < transferFunction.GetNumAlphaControlPoints())
 			{
 				MovablePanel alphaControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/AlphaControl.tscn").Instantiate<MovablePanel>();
 				alphaPanel.AddChild(alphaControl);
 				alphaControls.Add(alphaControl);
 			}
 
-			while (alphaControls.Count > transferFunction.alphaControlPoints.Count)
+			while (alphaControls.Count > transferFunction.GetNumAlphaControlPoints())
 			{
 				alphaPanel.RemoveChild(alphaControls[alphaControls.Count - 1]);
 				alphaControls.RemoveAt(alphaControls.Count - 1);
@@ -66,13 +68,13 @@ namespace VolumetricRendering
 			for (int i = 0; i < alphaControls.Count; i++)
 			{
 				MovablePanel alphaControl = alphaControls[i];
-				TFAlphaControlPoint alphaPoint = transferFunction.alphaControlPoints[i];
+				TFAlphaControlPoint alphaPoint = transferFunction.GetAlphaControlPoint(i);
 				if (alphaControl.IsMoving())
 				{
 					Vector2 value = (alphaControl.Position + alphaControl.Size * 0.5f) / alphaPanel.Size;
 					alphaPoint.dataValue = value.X;
 					alphaPoint.alphaValue = 1.0f - value.Y;
-					transferFunction.alphaControlPoints[i] = alphaPoint;
+					transferFunction.SetAlphaControlPoint(i, alphaPoint);
 				}
 				else
 				{
@@ -82,41 +84,31 @@ namespace VolumetricRendering
 					alphaControl.Position = alphaPos;
 				}
 			}
-			transferFunction.GenerateTextureAlpha(); // TODO
-			transferFunction.GenerateTextureColor(); // TODO
-			targetObject.UpdateMaterialProperties();
+		}
+
+		private void UpdatePoints()
+		{
+			if (alphaPanel != null)
+				UpdateAlphaPoints();
 		}
 
 		public override void _Ready()
 		{
-			/*transferFunction = new TransferFunction();
-			transferFunction.AddControlPoint(new TFColourControlPoint(0.0f, new Color(0.11f, 0.14f, 0.13f, 1.0f)));
-			transferFunction.AddControlPoint(new TFColourControlPoint(0.2415f, new Color(0.469f, 0.354f, 0.223f, 1.0f)));
-			transferFunction.AddControlPoint(new TFColourControlPoint(0.3253f, new Color(1.0f, 1.0f, 1.0f, 1.0f)));
-
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.0f, 0.0f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.1787f, 0.0f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.2f, 0.024f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.28f, 0.03f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.4f, 0.546f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.547f, 0.5266f));
-			InitialiseContent();*/
+			InitialiseContent();
 		}
 
 		public override void _Process(double delta)
 		{
-			if (transferFunction != null) // TODO
-				UpdatePoints();
-
-			if (targetObject == null || alphaPanel == null)
+			if (transferFunction == null && targetObject == null)
 				return;
 
-			if (transferFunction != targetObject.transferFunction)
+			if (transferFunction == null && targetObject != null)
 			{
 				transferFunction = targetObject.transferFunction;
 				InitialiseContent();
 			}
 
+			UpdatePoints();
 		}
 	}
 }
