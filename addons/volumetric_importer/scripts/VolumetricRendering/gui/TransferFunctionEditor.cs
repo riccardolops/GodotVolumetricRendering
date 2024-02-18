@@ -29,7 +29,6 @@ namespace VolumetricRendering
 
 		private void InitialiseContent()
 		{
-			GD.Print("UpdatePoints");
 			if (histogramTextureRect != null && targetObject != null)
 			{
 				histogramTextureRect.Texture = HistogramTextureGenerator.GenerateHistogramTexture(targetObject.dataset);
@@ -51,7 +50,6 @@ namespace VolumetricRendering
 
 		private void UpdatePoints()
 		{
-			GD.Print("UpdatePoints");
 			while (alphaControls.Count < transferFunction.alphaControlPoints.Count)
 			{
 				MovablePanel alphaControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/AlphaControl.tscn").Instantiate<MovablePanel>();
@@ -84,6 +82,9 @@ namespace VolumetricRendering
 					alphaControl.Position = alphaPos;
 				}
 			}
+			transferFunction.GenerateTextureAlpha(); // TODO
+			transferFunction.GenerateTextureColor(); // TODO
+			targetObject.UpdateMaterialProperties();
 		}
 
 		public override void _Ready()
@@ -98,8 +99,8 @@ namespace VolumetricRendering
 			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.2f, 0.024f));
 			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.28f, 0.03f));
 			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.4f, 0.546f));
-			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.547f, 0.5266f));*/
-			InitialiseContent();
+			transferFunction.AddControlPoint(new TFAlphaControlPoint(0.547f, 0.5266f));
+			InitialiseContent();*/
 		}
 
 		public override void _Process(double delta)

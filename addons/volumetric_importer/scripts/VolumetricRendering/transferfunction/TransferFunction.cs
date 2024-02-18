@@ -44,6 +44,9 @@ namespace VolumetricRendering
             if (textureColor == null)
                 CreateTextureColor();
 
+            gradientColor.Offsets = new float[0];
+            gradientColor.Colors = new Color[0];
+
             List<TFColourControlPoint> cols = new(colourControlPoints);
 
             // Sort lists of control points
@@ -59,12 +62,16 @@ namespace VolumetricRendering
             {
                 gradientColor.AddPoint(col.dataValue, col.colourValue);
             }
+            gradientColor.EmitChanged();
             textureColor.Gradient = gradientColor;
         }
         public void GenerateTextureAlpha()
         {
             if (textureAlpha == null)
                 CreateTextureAlpha();
+
+            gradientAlpha.Offsets = new float[0];
+            gradientAlpha.Colors = new Color[0];
 
             List<TFAlphaControlPoint> alphas = new(alphaControlPoints);
 
@@ -81,6 +88,7 @@ namespace VolumetricRendering
             {
                 gradientAlpha.AddPoint(alpha.dataValue, new Color(0.0f, 0.0f, 0.0f, alpha.alphaValue));
             }
+            gradientAlpha.EmitChanged();
             textureAlpha.Gradient = gradientAlpha;
         }
 

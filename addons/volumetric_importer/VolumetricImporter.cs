@@ -15,9 +15,13 @@ namespace VolumetricRendering
         private ProgressBar progressView;
         private RichTextLabel progressText;
         private Callable _buildCallable;
+        private VolumeRenderedObjectInspector volumeRenderedObjectInspector;
 
         public override void _EnterTree()
         {
+            volumeRenderedObjectInspector = new VolumeRenderedObjectInspector();
+            AddInspectorPlugin(volumeRenderedObjectInspector);
+
             dock = new()
             {
                 Name = "Volumetric Importer"
@@ -76,6 +80,7 @@ namespace VolumetricRendering
 
         public override void _ExitTree()
         {
+            RemoveInspectorPlugin(volumeRenderedObjectInspector);
             RemoveControlFromDocks(dock);
             dock.Free();
         }
