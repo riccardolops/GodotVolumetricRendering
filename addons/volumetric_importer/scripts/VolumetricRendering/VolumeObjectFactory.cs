@@ -24,6 +24,7 @@ namespace VolumetricRendering
             volObj.textureDataset = dataset.GetDataTexture();
             volObj.textureGradient = dataset.GetGradientTexture();
             volObj.sizeDataset = new Vector3I(dataset.dimX, dataset.dimY, dataset.dimZ);
+            volObj.dataset = dataset;
             return volObj;
         }
         public static async Task<VolumeRenderedObject> CreateObjectAsync(VolumeDataset dataset, IProgressHandler progressHandler = null)

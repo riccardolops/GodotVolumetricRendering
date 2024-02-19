@@ -86,15 +86,64 @@ namespace VolumetricRendering
 			}
 		}
 
+		private void UpdateColourPoints()
+		{
+			while (colourControls.Count < transferFunction.GetNumColourControlPoints())
+			{
+				MovablePanel colourControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/ColourControl.tscn").Instantiate<MovablePanel>();
+				colourPanel.AddChild(colourControl);
+				colourControls.Add(colourControl);
+			}
+
+			while (colourControls.Count > transferFunction.GetNumColourControlPoints())
+			{
+				colourPanel.RemoveChild(colourControls[colourControls.Count - 1]);
+				colourControls.RemoveAt(colourControls.Count - 1);
+			}
+
+			for (int i = 0; i < colourControls.Count; i++)
+			{
+				MovablePanel colourControl = colourControls[i];
+				TFColourControlPoint colourPoint = transferFunction.GetColourControlPoint(i);
+				if (colourControl.IsMoving())
+				{
+					colourPoint.dataValue = (colourControl.Position.X + colourControl.Size.X * 0.5f) / colourPanel.Size.X;
+					transferFunction.SetColourControlPoint(i, colourPoint);
+				}
+				else
+				{
+					Vector2 newPosition = colourPanel.Size * new Vector2(colourPoint.dataValue, 0.0f);
+					newPosition.Y = 0.0f;
+					newPosition.X -= colourControl.Size.X * 0.5f;
+					colourControl.Position = newPosition;
+					colourControl.Size = new Vector2(colourControl.Size.X, colourPanel.Size.Y);
+				}
+			}
+		}
+
 		private void UpdatePoints()
 		{
 			if (alphaPanel != null)
 				UpdateAlphaPoints();
+			if (colourPanel != null)
+				UpdateColourPoints();
+		}
+
+		private void OpenColourPicker()
+		{
+			ColorPicker colourPicker = new ColorPicker();
+			Popup popup = new Popup();
+			popup.AddChild(colourPicker);
+			colourPicker.ColorChanged += (Color colour) => {
+			};
+			AddChild(popup);
+			popup.PopupCentered();
 		}
 
 		public override void _Ready()
 		{
 			InitialiseContent();
+			OpenColourPicker(); // TODO
 		}
 
 		public override void _Process(double delta)

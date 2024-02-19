@@ -230,7 +230,7 @@ namespace VolumetricRendering
             }
             else
             {
-                GD.PrintErr("Failed to import NiFTi dataset");
+                GD.PrintErr("Failed to import raw dataset");
             }
         }
         void FindEditorBuildShortcut()

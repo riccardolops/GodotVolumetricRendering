@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ds2jtbehurth3"]
+[gd_scene load_steps=3 format=3 uid="uid://88xb0lorwvqf"]
 
-[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/MovablePanel.cs" id="1_rqeup"]
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/MovablePanel.cs" id="1_w3b5r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbcvt"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -18,6 +18,7 @@ corner_radius_bottom_left = 5
 offset_right = 16.0
 offset_bottom = 16.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rbcvt")
-script = ExtResource("1_rqeup")
+script = ExtResource("1_w3b5r")
+lockVerticalMovement = true
 lockToParentRect = true
-lockPivot = Vector2(0.5, 0.5)
+lockPivot = Vector2(0.5, 0)

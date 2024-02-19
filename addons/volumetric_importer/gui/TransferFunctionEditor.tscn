@@ -29,7 +29,7 @@ shader_parameter/tf_tex_alpha = SubResource("GradientTexture1D_uklad")
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_rlywn"]
 gradient = SubResource("Gradient_js6fr")
 
-[node name="TransferFunctionEditor" type="Panel" node_paths=PackedStringArray("alphaPanel", "histogramTextureRect", "paletteTextureRect")]
+[node name="TransferFunctionEditor" type="Panel" node_paths=PackedStringArray("alphaPanel", "colourPanel", "histogramTextureRect", "paletteTextureRect")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -39,6 +39,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_5qtx5")
 alphaPanel = NodePath("VBoxContainer/AlphaPanel")
+colourPanel = NodePath("VBoxContainer/ColourPanel")
 histogramTextureRect = NodePath("VBoxContainer/AlphaPanel/Histogram")
 paletteTextureRect = NodePath("VBoxContainer/ColourPanel/Palette")
 

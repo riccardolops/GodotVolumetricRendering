@@ -20,6 +20,9 @@ public partial class MovablePanel : Panel
 	[Export]
 	public bool lockToParentRect = false;
 
+	[Export(PropertyHint.Range, "0,1,")]
+	public Vector2 lockPivot = new Vector2(0.0f, 0.0f);
+
 	public Action onMove;
 
 	public bool IsMoving()
@@ -39,8 +42,8 @@ public partial class MovablePanel : Panel
 				originalPosition = this.GlobalPosition;
 				Rect2 rect = this.GetRect();
 				Rect2 parentRect = this.GetParentControl().GetRect();
-				minPosition = parentRect.Position;
-				maxPosition = parentRect.Size - rect.Size;
+				minPosition = parentRect.Position - lockPivot *rect.Size;
+				maxPosition = parentRect.Position + parentRect.Size - rect.Size + lockPivot *rect.Size;
 			}
 			else
 			{
@@ -55,7 +58,8 @@ public partial class MovablePanel : Panel
 		{
 			Vector2 offset = mouseMotionEvent.GlobalPosition - mousePressPosition;
 			Vector2 newPosition = originalPosition + new Vector2(lockHorizontalMovement ? 0.0f : offset.X, lockVerticalMovement ? 0.0f : offset.Y);
-			newPosition = newPosition.Clamp(minPosition, maxPosition);
+			if (lockToParentRect)
+				newPosition = newPosition.Clamp(minPosition, maxPosition);
 			this.GlobalPosition = newPosition;
 		}
 	}
