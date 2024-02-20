@@ -14,7 +14,7 @@ public partial class SampleViewer : Node3D
 
     private VolumeRenderedObject ImportRawDataset(string filePath, int dimX, int dimY, int dimZ, DataContentFormat contentFormat, Endianness endianness, int skipBytes)
     {
-        RawDatasetImporter datasetImporter = new RawDatasetImporter(filePath, 128, 256, 256, DataContentFormat.Uint8, Endianness.LittleEndian, 0);
+        RawDatasetImporter datasetImporter = new RawDatasetImporter(ProjectSettings.GlobalizePath(filePath), 128, 256, 256, DataContentFormat.Uint8, Endianness.LittleEndian, 0);
         VolumeDataset dataset = datasetImporter.Import();
         if (dataset != null)
         {

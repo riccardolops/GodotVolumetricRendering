@@ -77,8 +77,6 @@ namespace VolumetricRendering
                 };
                 alphaPanel.AddChild(addAlphaButton);
             }
-
-            UpdatePoints();
         }
 
         private void UpdateAlphaPoints()
