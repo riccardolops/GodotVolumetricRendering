@@ -58,8 +58,12 @@ namespace VolumetricRendering
                     TFColourControlPoint colourPoint = new TFColourControlPoint();
                     colourPoint.dataValue = colourPanel.GetLocalMousePosition().X / colourPanel.Size.X;
                     colourPoint.colourValue = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                    // Get index of new colour point
+                    int tfColIndex = 0;
+                    while (tfColIndex < transferFunction.GetNumColourControlPoints() && transferFunction.GetColourControlPoint(tfColIndex).dataValue < colourPoint.dataValue)
+                        tfColIndex++;
                     transferFunction.AddControlPoint(colourPoint);
-                    OpenColourPicker(transferFunction.GetNumColourControlPoints() - 1);
+                    OpenColourPicker(tfColIndex);
                 };
                 colourPanel.AddChild(addColourButton);
             }
