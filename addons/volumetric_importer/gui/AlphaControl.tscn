@@ -1,23 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://ds2jtbehurth3"]
+[gd_scene load_steps=2 format=3 uid="uid://deymguwylpfh2"]
 
-[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/MovablePanel.cs" id="1_rqeup"]
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/MovableButton.cs" id="1_himvp"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbcvt"]
-bg_color = Color(0.27451, 0.27451, 0.27451, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[node name="AlphaControl" type="Panel"]
+[node name="AlphaControl" type="Button"]
 offset_right = 16.0
 offset_bottom = 16.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_rbcvt")
-script = ExtResource("1_rqeup")
-lockToParentRect = true
-lockPivot = Vector2(0.5, 0.5)
+button_mask = 0
+script = ExtResource("1_himvp")

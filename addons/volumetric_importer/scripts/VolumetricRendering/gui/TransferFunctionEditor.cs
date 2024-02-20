@@ -26,8 +26,10 @@ namespace VolumetricRendering
 		[Export]
 		public TransferFunction transferFunction;
 
-		private List<MovablePanel> alphaControls = new List<MovablePanel>();
-		private List<MovablePanel> colourControls = new List<MovablePanel>();
+		private List<MovableButton> alphaControls = new List<MovableButton>();
+		private List<MovableButton> colourControls = new List<MovableButton>();
+		private BaseButton addColourButton = null;
+		private BaseButton addAlphaButton = null;
 
 		private void InitialiseContent()
 		{
@@ -47,6 +49,35 @@ namespace VolumetricRendering
 				paletteTextureRect.Texture = transferFunction.GetTextureColor();
 			}
 
+			if (addColourButton == null && colourPanel != null)
+			{
+				addColourButton = new TextureButton();
+				addColourButton.LayoutMode = 1;
+				addColourButton.SetAnchorsPreset(LayoutPreset.FullRect);
+				addColourButton.Pressed += () => {
+					TFColourControlPoint colourPoint = new TFColourControlPoint();
+					colourPoint.dataValue = colourPanel.GetLocalMousePosition().X / colourPanel.Size.X;
+					colourPoint.colourValue = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+					transferFunction.AddControlPoint(colourPoint);
+					OpenColourPicker(transferFunction.GetNumColourControlPoints() - 1);
+				};
+				colourPanel.AddChild(addColourButton);
+			}
+
+			if (addAlphaButton == null && alphaPanel != null)
+			{
+				addAlphaButton = new TextureButton();
+				addAlphaButton.LayoutMode = 1;
+				addAlphaButton.SetAnchorsPreset(LayoutPreset.FullRect);
+				addAlphaButton.Pressed += () => {
+					TFAlphaControlPoint alphaPoint = new TFAlphaControlPoint();
+					alphaPoint.dataValue = alphaPanel.GetLocalMousePosition().X / alphaPanel.Size.X;
+					alphaPoint.alphaValue = 1.0f - alphaPanel.GetLocalMousePosition().Y / alphaPanel.Size.Y;
+					transferFunction.AddControlPoint(alphaPoint);
+				};
+				alphaPanel.AddChild(addAlphaButton);
+			}
+
 			UpdatePoints();
 		}
 
@@ -54,7 +85,7 @@ namespace VolumetricRendering
 		{
 			while (alphaControls.Count < transferFunction.GetNumAlphaControlPoints())
 			{
-				MovablePanel alphaControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/AlphaControl.tscn").Instantiate<MovablePanel>();
+				MovableButton alphaControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/AlphaControl.tscn").Instantiate<MovableButton>();
 				alphaPanel.AddChild(alphaControl);
 				alphaControls.Add(alphaControl);
 			}
@@ -67,7 +98,7 @@ namespace VolumetricRendering
 
 			for (int i = 0; i < alphaControls.Count; i++)
 			{
-				MovablePanel alphaControl = alphaControls[i];
+				MovableButton alphaControl = alphaControls[i];
 				TFAlphaControlPoint alphaPoint = transferFunction.GetAlphaControlPoint(i);
 				if (alphaControl.IsMoving())
 				{
@@ -90,7 +121,11 @@ namespace VolumetricRendering
 		{
 			while (colourControls.Count < transferFunction.GetNumColourControlPoints())
 			{
-				MovablePanel colourControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/ColourControl.tscn").Instantiate<MovablePanel>();
+				MovableButton colourControl = GD.Load<PackedScene>("res://addons/volumetric_importer/gui/ColourControl.tscn").Instantiate<MovableButton>();
+				colourControl.Pressed += () => {
+				int colourIndex = colourControls.IndexOf(colourControl);
+				   OpenColourPicker(colourIndex);
+				};
 				colourPanel.AddChild(colourControl);
 				colourControls.Add(colourControl);
 			}
@@ -103,7 +138,7 @@ namespace VolumetricRendering
 
 			for (int i = 0; i < colourControls.Count; i++)
 			{
-				MovablePanel colourControl = colourControls[i];
+				MovableButton colourControl = colourControls[i];
 				TFColourControlPoint colourPoint = transferFunction.GetColourControlPoint(i);
 				if (colourControl.IsMoving())
 				{
@@ -125,25 +160,62 @@ namespace VolumetricRendering
 		{
 			if (alphaPanel != null)
 				UpdateAlphaPoints();
+
 			if (colourPanel != null)
 				UpdateColourPoints();
 		}
 
-		private void OpenColourPicker()
+		private void OpenColourPicker(int colourIndex)
 		{
+			if (colourIndex >= transferFunction.GetNumColourControlPoints())
+				return;
+
 			ColorPicker colourPicker = new ColorPicker();
 			Popup popup = new Popup();
 			popup.AddChild(colourPicker);
+			colourPicker.Color = transferFunction.GetColourControlPoint(colourIndex).colourValue;
 			colourPicker.ColorChanged += (Color colour) => {
+				if (colourIndex < transferFunction.GetNumColourControlPoints())
+				{
+					TFColourControlPoint colourPoint = transferFunction.GetColourControlPoint(colourIndex);
+					colourPoint.colourValue = colour;
+					transferFunction.SetColourControlPoint(colourIndex, colourPoint);
+				}
 			};
 			AddChild(popup);
 			popup.PopupCentered();
 		}
 
+		public override void _Input(InputEvent @event)
+		{
+			InputEventKey keyEvent = @event as InputEventKey;
+			if (keyEvent != null && keyEvent.Keycode == Key.Delete)
+			{
+				for (int i = 0; i < colourControls.Count; i++)
+				{
+					if (colourControls[i].HasFocus())
+					{
+						colourControls[i].ReleaseFocus();
+						transferFunction.RemoveColourControlPoint(i);
+						return;
+					}
+				}
+				for (int i = 0; i < alphaControls.Count; i++)
+				{
+					if (alphaControls[i].HasFocus())
+					{
+						alphaControls[i].ReleaseFocus();
+						transferFunction.RemoveAlphaControlPoint(i);
+						return;
+					}
+				}
+			}
+			base._Input(@event);
+		}
+
 		public override void _Ready()
 		{
 			InitialiseContent();
-			OpenColourPicker(); // TODO
 		}
 
 		public override void _Process(double delta)

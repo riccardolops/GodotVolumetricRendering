@@ -36,6 +36,16 @@ namespace VolumetricRendering
             gradientAlpha.AddPoint(ctrlPoint.dataValue, new Color(0.0f, 0.0f, 0.0f, ctrlPoint.alphaValue));
         }
 
+        public void RemoveColourControlPoint(int index)
+        {
+            gradientColor.RemovePoint(index);
+        }
+
+        public void RemoveAlphaControlPoint(int index)
+        {
+            gradientAlpha.RemovePoint(index);
+        }
+
         public int GetNumColourControlPoints()
         {
             return gradientColor.GetPointCount();
