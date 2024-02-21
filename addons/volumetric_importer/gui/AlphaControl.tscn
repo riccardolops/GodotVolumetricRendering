@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://deymguwylpfh2"]
+
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/MovableButton.cs" id="1_himvp"]
+
+[node name="AlphaControl" type="Button"]
+offset_right = 16.0
+offset_bottom = 16.0
+button_mask = 0
+script = ExtResource("1_himvp")

@@ -19,11 +19,11 @@ This repository builds upon the [work by Matias Lavik](https://github.com/mlavik
 - [x] Transfer function editor*
 - [x] Cubic sampling
 - [x] Loading of RAW datasets
+- [x] Complete transfer function editor
 
 ## Features yet to be ported over
 
 - [ ] Cutout/clipping tools
-- [ ] A cooler way to edit the transfer function with the histogram of the density values
 - [ ] Lighting camera dependent
 - [ ] 2D Transfer function
 
@@ -34,3 +34,5 @@ Download [SimpleITK binaries](https://github.com/SimpleITK/SimpleITK/releases) f
 Import your dataset in the scene using one of the import buttons.
 
 You can change the VolumeRenderedObject properties in the inspector.
+
+For an example of how to use the plugin, see [SampleViewer.cs](addons/volumetric_importer/scripts/Samples/SampleViewer.cs), used in the [sample scene](main.tscn).

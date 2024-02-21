@@ -13,7 +13,8 @@ namespace VolumetricRendering
     [Tool]
     public partial class VolumeRenderedObject : MeshInstance3D
     {
-        public TransferFunction transferFunction;
+        [Export]
+        public TransferFunction transferFunction = ResourceLoader.Load<TransferFunction>("res://addons/volumetric_importer/transfer_functions/default_tf.tres");
         public TransferFunction2D transferFunction2D;
         public ImageTexture3D textureDataset;
         public ImageTexture3D textureGradient;
@@ -24,6 +25,8 @@ namespace VolumetricRendering
         private LightSource lightSource;
         private CrossSectionManager crossSectionManager;
         private RenderMode renderMode = RenderMode.MaximumIntensityProjection;
+        public VolumeDataset dataset;
+        private TransferFunction oldTransferFunction = null;
         [Export]
         public RenderMode RenderMode
         {
@@ -108,15 +111,12 @@ namespace VolumetricRendering
                 volumeMaterial.SetShaderParameter("useLighting", lightingEnabled);
             }
         }
-        [Export]
-        private Gradient transferFunctionColor = ResourceLoader.Load<Gradient>("res://addons/volumetric_importer/materials/default_color_gradient.tres");
-        [Export]
-        private Gradient transferFunctionAlpha = ResourceLoader.Load<Gradient>("res://addons/volumetric_importer/materials/default_alpha_gradient.tres");
         public ShaderMaterial volumeMaterial;
         public override void _EnterTree()
         {
             volumeMaterial ??= GetActiveMaterial(0) as ShaderMaterial;
         }
+
         /// <summary>
         /// Called when the node enters the scene tree for the first time.
         /// </summary>
@@ -131,7 +131,13 @@ namespace VolumetricRendering
         /// <param name="delta"></param>
         public override void _Process(double delta)
         {
+            if (transferFunction != oldTransferFunction)
+            {
+                oldTransferFunction = transferFunction;
+                UpdateMaterialProperties();
+            }
         }
+
         public CrossSectionManager GetCrossSectionManager()
         {
             if (crossSectionManager == null)
@@ -141,7 +147,7 @@ namespace VolumetricRendering
             }
             return crossSectionManager;
         }
-        private void UpdateMaterialProperties(IProgressHandler progressHandler = null)
+        public void UpdateMaterialProperties(IProgressHandler progressHandler = null)
         {
             _ = UpdateMaterialPropertiesAsync(progressHandler);
         }
@@ -170,8 +176,6 @@ namespace VolumetricRendering
             }
             else
             {
-                transferFunction.GetTextureColor().Gradient = transferFunctionColor;
-                transferFunction.GetTextureAlpha().Gradient = transferFunctionAlpha;
                 volumeMaterial.SetShaderParameter("transferfunctionSamplerColor", transferFunction.GetTextureColor());
                 volumeMaterial.SetShaderParameter("transferfunctionSamplerAlpha", transferFunction.GetTextureAlpha());
                 volumeMaterial.SetShaderParameter("useTransferFunction2D", false);

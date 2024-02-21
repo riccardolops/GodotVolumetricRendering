@@ -15,9 +15,16 @@ namespace VolumetricRendering
         private ProgressBar progressView;
         private RichTextLabel progressText;
         private Callable _buildCallable;
+        private TransferFunctionInspector transferFunctionInspector;
+        private VolumeRenderedObjectInspector volumeRenderedObjectInspector;
 
         public override void _EnterTree()
         {
+            transferFunctionInspector = new TransferFunctionInspector();
+            volumeRenderedObjectInspector = new VolumeRenderedObjectInspector();
+            AddInspectorPlugin(transferFunctionInspector);
+            AddInspectorPlugin(volumeRenderedObjectInspector);
+
             dock = new()
             {
                 Name = "Volumetric Importer"
@@ -76,6 +83,8 @@ namespace VolumetricRendering
 
         public override void _ExitTree()
         {
+            RemoveInspectorPlugin(transferFunctionInspector);
+            RemoveInspectorPlugin(volumeRenderedObjectInspector);
             RemoveControlFromDocks(dock);
             dock.Free();
         }
@@ -221,7 +230,7 @@ namespace VolumetricRendering
             }
             else
             {
-                GD.PrintErr("Failed to import NiFTi dataset");
+                GD.PrintErr("Failed to import raw dataset");
             }
         }
         void FindEditorBuildShortcut()

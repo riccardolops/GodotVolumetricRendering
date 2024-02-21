@@ -1,3 +1,20 @@
-[gd_scene format=3 uid="uid://dmvf7wwku40dx"]
+[gd_scene load_steps=3 format=3 uid="uid://dmvf7wwku40dx"]
+
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/Samples/SampleViewer.cs" id="1_rwvgc"]
+
+[sub_resource type="Environment" id="Environment_t8fhe"]
+background_mode = 1
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_rwvgc")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.973929, 0.0958552, -0.205609, 0, 0.906345, 0.422539, 0.226855, -0.411523, 0.882715, -0.994273, 1.28702, 1.61297)
+environment = SubResource("Environment_t8fhe")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.13025, -0.741821, -6.95943)
+visible = false
+size = Vector3(11.4763, 6.56079, 1)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

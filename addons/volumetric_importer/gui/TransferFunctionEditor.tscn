@@ -1,0 +1,80 @@
+[gd_scene load_steps=10 format=3 uid="uid://c3nk0k7b4r7c"]
+
+[ext_resource type="Script" path="res://addons/volumetric_importer/scripts/VolumetricRendering/gui/TransferFunctionEditor.cs" id="1_5qtx5"]
+[ext_resource type="Shader" path="res://addons/volumetric_importer/shaders/TransferFunctionEditor.gdshader" id="2_ikujj"]
+
+[sub_resource type="Gradient" id="Gradient_slyf6"]
+offsets = PackedFloat32Array(0, 0, 0.164056, 0.241546, 0.362249, 0.489597, 0.665206, 0.969866, 0.969866)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, -0.0113765, 0, 0, 0, -0.00633538, 0, 0, 0, 0.14867, 0, 0, 0, 0.684452, 0, 0, 0, 0.22502, 0, 0, 0, 0.441315, 0, 0, 0, 0.435055)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hanoh"]
+gradient = SubResource("Gradient_slyf6")
+width = 512
+
+[sub_resource type="Gradient" id="Gradient_k6207"]
+offsets = PackedFloat32Array(0, 0.283401, 0.461538, 0.813765, 0.894737, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.347656, 0.120865, 0.25375, 1, 0.493751, 0.373291, 0.32882, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nyqs5"]
+gradient = SubResource("Gradient_k6207")
+width = 512
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qpijs"]
+shader = ExtResource("2_ikujj")
+shader_parameter/tf_tex_colour = SubResource("GradientTexture1D_nyqs5")
+shader_parameter/tf_tex_alpha = SubResource("GradientTexture1D_hanoh")
+
+[sub_resource type="Gradient" id="Gradient_js6fr"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rlywn"]
+gradient = SubResource("Gradient_js6fr")
+
+[node name="TransferFunctionEditor" type="Panel" node_paths=PackedStringArray("alphaPanel", "colourPanel", "histogramTextureRect", "paletteTextureRect")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_5qtx5")
+alphaPanel = NodePath("VBoxContainer/AlphaPanel")
+colourPanel = NodePath("VBoxContainer/ColourPanel")
+histogramTextureRect = NodePath("VBoxContainer/AlphaPanel/Histogram")
+paletteTextureRect = NodePath("VBoxContainer/ColourPanel/Palette")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AlphaPanel" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Histogram" type="TextureRect" parent="VBoxContainer/AlphaPanel"]
+material = SubResource("ShaderMaterial_qpijs")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_rlywn")
+
+[node name="ColourPanel" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 70)
+layout_mode = 2
+
+[node name="Palette" type="TextureRect" parent="VBoxContainer/ColourPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
