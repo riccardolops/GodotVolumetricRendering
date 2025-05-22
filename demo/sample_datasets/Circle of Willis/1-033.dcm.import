@@ -1,0 +1,14 @@
+[remap]
+
+importer="volumetric_importer.sitk"
+type="VolumeDataset"
+uid="uid://b2h11hdxaat3k"
+valid=false
+
+[deps]
+
+source_file="res://sample_datasets/Circle of Willis/1-033.dcm"
+
+[params]
+
+import_folder=false

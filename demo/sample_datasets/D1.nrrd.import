@@ -1,0 +1,15 @@
+[remap]
+
+importer="volumetric_importer.sitk"
+type="VolumeDataset"
+uid="uid://cdegs6x5b4j5o"
+path="res://.godot/imported/D1.nrrd-74f29a74f260fbaab49cdaa82d8e1a76.res"
+
+[deps]
+
+source_file="res://sample_datasets/D1.nrrd"
+dest_files=["res://.godot/imported/D1.nrrd-74f29a74f260fbaab49cdaa82d8e1a76.res"]
+
+[params]
+
+import_folder=false

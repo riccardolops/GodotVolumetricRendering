@@ -1,0 +1,23 @@
+[gd_resource type="TransferFunction" load_steps=5 format=3 uid="uid://dnl1j33oy5qni"]
+
+[sub_resource type="Gradient" id="Gradient_lmxw5"]
+offsets = PackedFloat32Array(0, 0, 0.165033, 0.267913, 0.362249, 0.500339, 0.665206, 0.969866, 0.969866)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0.0448195, 0, 0, 0, 0.170898, 0, 0, 0, 0.14867, 0, 0, 0, 0.29108, 0, 0, 0, 0.22502, 0, 0, 0, 0.441315, 0, 0, 0, 0.435055)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6wonq"]
+gradient = SubResource("Gradient_lmxw5")
+width = 512
+use_hdr = true
+
+[sub_resource type="Gradient" id="Gradient_vqv2m"]
+offsets = PackedFloat32Array(0, 0.178138, 0.283401, 0.473776, 0.813765, 0.894737, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.11, 0.14, 0.13, 1, 0.469, 0.354, 0.223, 1, 0.493751, 0.373291, 0.32882, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lnvs8"]
+gradient = SubResource("Gradient_vqv2m")
+width = 512
+use_hdr = true
+
+[resource]
+gradient_color = SubResource("GradientTexture1D_lnvs8")
+gradient_alpha = SubResource("GradientTexture1D_6wonq")

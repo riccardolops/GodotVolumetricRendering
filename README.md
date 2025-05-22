@@ -12,7 +12,7 @@ This repository builds upon the [work by Matias Lavik](https://github.com/mlavik
 - [x] Maximum intensity projection
 - [x] Isosurface rendering, using 1D transfer functions
 - [x] Support for SITK file formats:
-  - [x] DICOM support
+  - [ ] DICOM support
   - [x] NRRD support
   - [x] NIFTII support
 - [x] Lighting*

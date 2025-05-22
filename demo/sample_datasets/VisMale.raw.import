@@ -1,0 +1,20 @@
+[remap]
+
+importer="volumetric_importer.raw"
+type="VolumeDataset"
+uid="uid://dbepynd6o1fsv"
+path="res://.godot/imported/VisMale.raw-58fe7e7f81b4f49b49d8f5e5bbd503b5.res"
+
+[deps]
+
+source_file="res://sample_datasets/VisMale.raw"
+dest_files=["res://.godot/imported/VisMale.raw-58fe7e7f81b4f49b49d8f5e5bbd503b5.res"]
+
+[params]
+
+Dim x=128
+Dim y=256
+Dim z=256
+Bytes to skip=0
+Data format=0
+Endianness=0

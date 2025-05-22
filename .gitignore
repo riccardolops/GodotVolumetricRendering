@@ -1,8 +1,20 @@
-# Godot 4+ specific ignores
-.godot/
+# Objects.
+.scons-cache/
+*.os
+
+# SConstruct
+.sconf_temp
+.sconsign.dblite
+*.pyc
+
+# MacOS
+.DS_Store
+
+# Editors
 .vscode/
-.vs/
-lib/SimpleITK/
-SimpleITKCSharpNative.dll
-libSimpleITKCSharpNative.so
-libSimpleITKCSharpNative.dylib
+
+# Built libs
+*.so
+*.dll
+*.framework
+*.xcframework
