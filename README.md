@@ -29,10 +29,15 @@ This repository builds upon the [work by Matias Lavik](https://github.com/mlavik
 
 ## How to use
 
-Download [SimpleITK binaries](https://github.com/SimpleITK/SimpleITK/releases) for your platform using the "Download SITK" button.
-
-Import your dataset in the scene using one of the import buttons.
+1. Add the VolumeRenderedObject node to your scene
+2. From the inspector, load a custom resource dataset. (Without mono is still usable! But since the NIFTII, DICOM and NRRD formats are read using the SITK library you will need to have godot-mono installed on your system.)
+Optional if you have godot-mono installed:
+3. To read all the formats supported by SITK, you need to enable the SITK plugin like so:
+<img src="Screenshots/monositk_support.gif">
+4. After that, you can download the SimpleITK binaries from the menu in "Project > Tools > Download and setup SimpleITK":
+<img src="Screenshots/download_simpleitk.gif">
+5. Once the binaries are downloaded, you need to build the mono project:
+<img src="Screenshots/build_mono_project.gif">
+6. Now you are good to go! :)
 
 You can change the VolumeRenderedObject properties in the inspector.
-
-For an example of how to use the plugin, see [SampleViewer.cs](addons/volumetric_importer/scripts/Samples/SampleViewer.cs), used in the [sample scene](main.tscn).
