@@ -20,7 +20,7 @@ project/assembly_name="demo"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godotvolumetricrendering/plugin.cfg", "res://addons/sitkvolumetricimporter/plugin.cfg")
+enabled=PackedStringArray("res://addons/godotvolumetricrendering/plugin.cfg")
 
 [rendering]
 
