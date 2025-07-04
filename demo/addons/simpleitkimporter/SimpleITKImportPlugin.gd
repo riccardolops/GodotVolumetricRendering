@@ -40,7 +40,7 @@ func _get_priority():
     return 1
 
 func _import(source_file, save_path, options, platform_variants, gen_files):
-    var sitk_importer = load("res://addons/sitkvolumetricimporter/SITKImporter.cs").new()
+    var sitk_importer = load("res://addons/simpleitkimporter/SITKImporter.cs").new()
     var result = sitk_importer.Load(ProjectSettings.globalize_path(source_file))
     if result == FAILED:
         return FAILED

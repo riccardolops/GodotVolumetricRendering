@@ -11,19 +11,18 @@
       <HintPath>lib\SimpleITK\SimpleITKCSharpManaged.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\SimpleITKCSharpNative.dll')">
-    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll">
+  <ItemGroup>
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll" Condition="'$(OS)' == 'Windows_NT'">
+      <Link>SimpleITKCSharpNative.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\libSimpleITKCSharpNative.so')">
-    <Content Include="lib\SimpleITK\libSimpleITKCSharpNative.so">
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.so" Condition="'$(OS)' == 'Unix'">
+      <Link>SimpleITKCSharpNative.so</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup Condition="Exists('lib\SimpleITK\SimpleITKCSharpManaged.dll')">
-    <Reference Include="SimpleITKCSharpManaged">
-      <HintPath>lib\SimpleITK\SimpleITKCSharpManaged.dll</HintPath>
-    </Reference>
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dylib" Condition="'$(OS)' == 'OSX'">
+      <Link>SimpleITKCSharpNative.dylib</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

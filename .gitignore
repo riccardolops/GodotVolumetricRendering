@@ -1,6 +1,17 @@
+# Godot-specific ignores (Include script cache. See godot issue #75388)
+demo/.import/
+demo/.godot/
+export.cfg
+export_presets.cfg
+
+# SimpleITK specific ignores
+demo/lib
+
 # Objects.
 .scons-cache/
 *.os
+*.obj
+*.o
 
 # SConstruct
 .sconf_temp
@@ -16,5 +27,7 @@
 # Built libs
 *.so
 *.dll
+*.exp
+*.lib
 *.framework
 *.xcframework

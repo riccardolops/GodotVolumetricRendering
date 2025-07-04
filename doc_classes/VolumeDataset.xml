@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="VolumeDataset" inherits="Resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="data" type="float[]" setter="set_data" getter="get_data" default="[]">
+		</member>
+		<member name="gradient" type="ImageTexture3D" setter="set_gradient_texture" getter="get_gradient_texture">
+		</member>
+		<member name="histogram" type="Texture2D" setter="set_histogram_texture" getter="get_histogram_texture">
+		</member>
+		<member name="rotation" type="Quaternion" setter="set_rotation" getter="get_rotation" default="Quaternion(0, 0, 0, 1)">
+		</member>
+		<member name="scale" type="Vector3" setter="set_scale" getter="get_scale" default="Vector3(1, 1, 1)">
+		</member>
+		<member name="volume" type="ImageTexture3D" setter="set_volume_texture" getter="get_volume_texture">
+		</member>
+	</members>
+</class>

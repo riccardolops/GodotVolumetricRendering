@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="VolumeRenderedObject" inherits="MeshInstance3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="cubic_interpolation" type="bool" setter="set_cubic_interpolation" getter="get_cubic_interpolation" default="false">
+		</member>
+		<member name="dataset" type="VolumeDataset" setter="set_dataset" getter="get_dataset">
+		</member>
+		<member name="gradient_lighting_threshold" type="Vector2" setter="set_gradient_lighting_threshold" getter="get_gradient_lighting_threshold" default="Vector2(0.02, 0.15)">
+		</member>
+		<member name="light_source" type="int" setter="set_light_source" getter="get_light_source" enum="VolumeRenderedObject.LightSource" default="0">
+		</member>
+		<member name="lighting_enabled" type="bool" setter="set_lighting_enabled" getter="get_lighting_enabled" default="false">
+		</member>
+		<member name="mesh" type="Mesh" setter="set_mesh" getter="get_mesh" overrides="MeshInstance3D" />
+		<member name="min_gradient" type="float" setter="set_min_gradient" getter="get_min_gradient" default="0.01">
+		</member>
+		<member name="ray_termination" type="bool" setter="set_ray_termination" getter="get_ray_termination" default="false">
+		</member>
+		<member name="render_mode" type="int" setter="set_render_mode" getter="get_render_mode" enum="VolumeRenderedObject.RenderMode" default="0">
+		</member>
+		<member name="transfer_function" type="TransferFunction" setter="set_transfer_function" getter="get_transfer_function">
+		</member>
+		<member name="visibility_window" type="Vector2" setter="set_visibility_window" getter="get_visibility_window" default="Vector2(0.001, 1)">
+		</member>
+	</members>
+</class>

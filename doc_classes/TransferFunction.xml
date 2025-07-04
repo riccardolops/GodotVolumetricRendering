@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="TransferFunction" inherits="Resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="gradient_alpha" type="GradientTexture1D" setter="set_gradient_alpha" getter="get_gradient_alpha">
+		</member>
+		<member name="gradient_color" type="GradientTexture1D" setter="set_gradient_color" getter="get_gradient_color">
+		</member>
+	</members>
+</class>
