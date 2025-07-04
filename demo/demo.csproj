@@ -12,15 +12,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll" Condition="'$(OS)' == 'Windows_NT'">
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dll" Condition="'$(OS)' == 'Windows_NT' And Exists('lib\SimpleITK\SimpleITKCSharpNative.dll')">
       <Link>SimpleITKCSharpNative.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.so" Condition="'$(OS)' == 'Unix'">
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.so" Condition="'$(OS)' == 'Unix' And Exists('lib\SimpleITK\SimpleITKCSharpNative.so')">
       <Link>SimpleITKCSharpNative.so</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dylib" Condition="'$(OS)' == 'OSX'">
+    <Content Include="lib\SimpleITK\SimpleITKCSharpNative.dylib" Condition="'$(OS)' == 'OSX' And Exists('lib\SimpleITK\SimpleITKCSharpNative.dylib')">
       <Link>SimpleITKCSharpNative.dylib</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
