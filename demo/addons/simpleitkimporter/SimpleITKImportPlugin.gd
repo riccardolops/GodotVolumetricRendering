@@ -34,7 +34,7 @@ func _get_preset_name(preset_index):
     return "Default"
 
 func _get_import_options(path, preset_index):
-    return [{"name": "import_folder", "default_value": false}]
+    return [{"name": "import_folder", "default_value": true}]
 
 func _get_priority():
     return 1
